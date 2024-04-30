@@ -13,11 +13,9 @@ pipeline {
                     script {
                         sh(script: "aws ec2 create-key-pair --key-name ${params.Environment}-Keypair --region ${AWS_REGION} --query 'KeyMaterial' --output text > ${params.Environment}-Keypair.pem", returnStdout: true)
                         sh(script: "sudo chmod 400 ${params.Environment}-Keypair.pem", returnStatus: true)
-                        //sh "aws ec2 create-key-pair --key-name ${params.Environment}-Keypair --region ${AWS_REGION} --query 'KeyMaterial' --output text > ${params.Environment}-Keypair.pem"
-                        // sh "sudo chmod 400 ${params.Environment}-Keypair.pem"
-                        // sh(script: "terraform init", returnStdout: true)
-                        // sh(script: "terraform plan", returnStdout: true)
-                        // sh(script: "terraform apply -auto-approve -var 'instance_type=${params.InstanceType}' -var 'ami=${params.AMI}' -var 'key_name=${params.Environment}-Keypair' -var 'tag={'Name'=Blue-Rental-${Environment}}'", returnStdout: true)
+                        sh(script: "terraform init", returnStdout: true)
+                        sh(script: "terraform plan", returnStdout: true)
+                        sh(script: "terraform apply -auto-approve -var 'instance_type=${params.InstanceType}' -var 'ami=${params.AMI}' -var 'key_name=${params.Environment}-Keypair' -var 'tag={'Name'=Blue-Rental-${Environment}}'", returnStdout: true)
                     }
                 }
             }
