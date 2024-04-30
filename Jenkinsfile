@@ -19,17 +19,24 @@ pipeline {
                 script {
                     if (params.Environment == 'DEV') {
                         echo "Deploying to Developer environment"
-                        sh 'cd Solution-Files/Task1/Terraform/${params.Environment}'
+                        sh 'cd Solution-Files/Task1/Terraform/DEV'
                         sh(script: "terraform init", returnStdout: true)
+                        sh(script: "terraform plan", returnStdout: true)
                     } else if (params.Environment == 'QA') {
                         echo "Deploying to QA environment"
-                        // Add your steps for deploying to QA environment
+                        sh 'cd Solution-Files/Task1/Terraform/QA'
+                        sh(script: "terraform init", returnStdout: true)
+                        sh(script: "terraform plan", returnStdout: true)
                     } else if (params.Environment == 'PROD') {
                         echo "Deploying to Production environment"
-                        // Add your steps for deploying to Production environment
+                        sh 'cd Solution-Files/Task1/Terraform/PROD'
+                        sh(script: "terraform init", returnStdout: true)
+                        sh(script: "terraform plan", returnStdout: true)
                     } else if (params.Environment == 'STAG') {
                         echo "Deploying to Staging environment"
-                        // Add your steps for deploying to Production environment
+                        sh 'cd Solution-Files/Task1/Terraform/STAG'
+                        sh(script: "terraform init", returnStdout: true)
+                        sh(script: "terraform plan", returnStdout: true)
                     } else {
                         error "Invalid environment selected"
                     }
