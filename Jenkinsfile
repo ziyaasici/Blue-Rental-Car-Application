@@ -21,28 +21,28 @@ pipeline {
                     if (params.Environment == 'DEV') {
                         echo "Deploying to Developer environment"
                         sh'pwd'
-                        sh 'cd Solution-Files/Task1/Terraform/DEV'
+                        sh 'cd /Solution-Files/Task1/Terraform/DEV'
                         sh'pwd'
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform plan", returnStdout: true)
                     } else if (params.Environment == 'QA') {
                         echo "Deploying to QA environment"
                         sh'pwd'
-                        sh 'cd Solution-Files/Task1/Terraform/QA'
+                        sh 'cd /Solution-Files/Task1/Terraform/QA'
                         sh'pwd'
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform plan", returnStdout: true)
                     } else if (params.Environment == 'PROD') {
                         echo "Deploying to Production environment"
                         sh'pwd'
-                        sh 'cd Solution-Files/Task1/Terraform/PROD'
+                        sh 'cd /Solution-Files/Task1/Terraform/PROD'
                         sh'pwd'
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform plan", returnStdout: true)
                     } else if (params.Environment == 'STAG') {
                         echo "Deploying to Staging environment"
                         sh'pwd'
-                        sh 'cd Solution-Files/Task1/Terraform/STAG'
+                        sh 'cd /Solution-Files/Task1/Terraform/STAG'
                         sh'pwd'
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform plan", returnStdout: true)
