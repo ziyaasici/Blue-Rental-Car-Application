@@ -1,17 +1,17 @@
 variable "environment" {
-
+  default = "DEFAULT"
 }
 
 variable "instance_type" {
-
+  default = "DEFAULT"
 }
 
 variable "ami" {
-
+  default = "DEFAULT"
 }
 
 variable "key_name" {
-
+  default = "DEFAULT"
 }
 
 variable "ports" {
