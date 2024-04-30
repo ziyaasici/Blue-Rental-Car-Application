@@ -20,4 +20,7 @@ variable "ports" {
 
 variable "tags" {
   type        = map(string)
+  default     = {
+    Name = "Blue-Rental"
+  }
 }
