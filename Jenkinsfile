@@ -11,6 +11,7 @@ pipeline {
                 script {
                     sh(script: "aws ec2 create-key-pair --key-name ${params.Environment}-Keypair --region ${AWS_REGION} --query 'KeyMaterial' --output text > ${params.Environment}-Keypair.pem", returnStdout: true)
                     sh(script: "sudo chmod 400 ${params.Environment}-Keypair.pem", returnStatus: true)
+                    sh 'pwd'
                 }
             }
         }
@@ -19,21 +20,25 @@ pipeline {
                 script {
                     if (params.Environment == 'DEV') {
                         echo "Deploying to Developer environment"
+                        sh'pwd'
                         sh 'cd Solution-Files/Task1/Terraform/DEV'
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform plan", returnStdout: true)
                     } else if (params.Environment == 'QA') {
                         echo "Deploying to QA environment"
+                        sh'pwd'
                         sh 'cd Solution-Files/Task1/Terraform/QA'
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform plan", returnStdout: true)
                     } else if (params.Environment == 'PROD') {
                         echo "Deploying to Production environment"
+                        sh'pwd'
                         sh 'cd Solution-Files/Task1/Terraform/PROD'
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform plan", returnStdout: true)
                     } else if (params.Environment == 'STAG') {
                         echo "Deploying to Staging environment"
+                        sh'pwd'
                         sh 'cd Solution-Files/Task1/Terraform/STAG'
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform plan", returnStdout: true)
