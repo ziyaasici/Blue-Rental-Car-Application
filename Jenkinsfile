@@ -23,7 +23,7 @@ pipeline {
     }
     post {
         failure {
-            sh(script: 'aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair', returnStdout: true)
+            sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
         }
     }
 }
