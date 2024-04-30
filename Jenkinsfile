@@ -32,6 +32,7 @@ pipeline {
                                         -var environment='${ENV}' \
                                         -var instance_type='${INSTANCE_TYPE}' \
                                         -var ami='${AMI}'"
+                            sh "terraform refresh"
                             sh "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
                                         -var key_name='${KEY_NAME}' \
@@ -49,6 +50,7 @@ pipeline {
                                         -var environment='${ENV}' \
                                         -var instance_type='${INSTANCE_TYPE}' \
                                         -var ami='${AMI}'"
+                            sh "terraform refresh"
                             sh "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
                                         -var key_name='${KEY_NAME}' \
@@ -66,6 +68,7 @@ pipeline {
                                         -var environment='${ENV}' \
                                         -var instance_type='${INSTANCE_TYPE}' \
                                         -var ami='${AMI}'"
+                            sh "terraform refresh"  
                             sh "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
                                         -var key_name='${KEY_NAME}' \
@@ -83,6 +86,7 @@ pipeline {
                                         -var environment='${ENV}' \
                                         -var instance_type='${INSTANCE_TYPE}' \
                                         -var ami='${AMI}'"
+                            sh "terraform refresh"  
                             sh "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
                                         -var key_name='${KEY_NAME}' \
