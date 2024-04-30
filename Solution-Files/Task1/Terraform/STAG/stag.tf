@@ -3,6 +3,6 @@ module "STAG" {
   environment = "STAG"
 }
 
-output "public_ip" {
-  value = module.STAG.public_ip
-}
+# output "public_ip" {
+#   value = module.STAG.public_ip
+# }

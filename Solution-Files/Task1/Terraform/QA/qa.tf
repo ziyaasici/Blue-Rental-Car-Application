@@ -3,6 +3,6 @@ module "QA" {
   environment = "QA"
 }
 
-output "public_ip" {
-  value = module.QA.public_ip
-}
+# output "public_ip" {
+#   value = module.QA.public_ip
+# }

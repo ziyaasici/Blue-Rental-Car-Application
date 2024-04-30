@@ -3,6 +3,6 @@ module "PROD" {
   environment = "PROD"
 }
 
-output "public_ip" {
-  value = module.PROD.public_ip
-}
+# output "public_ip" {
+#   value = module.PROD.public_ip
+# }
