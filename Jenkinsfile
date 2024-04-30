@@ -5,7 +5,7 @@ pipeline {
         ECR_REPO = '621627302500.dkr.ecr.us-east-1.amazonaws.com'
         AWS_REGION = 'us-east-1'
         DOCKER_SERVER = 'Jenkins-Project-Docker'
-        TAGS = '{"Name":"Blue-Rental-${params.Environment}"}'
+        TAGS = "{\"Name\":\"Blue-Rental-${params.Environment}\"}"
     }
     stages {
         stage('Create Infrastructure') {
@@ -17,7 +17,7 @@ pipeline {
 
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform plan", returnStdout: true)
-                        sh(script: "terraform apply -auto-approve -var tags=${TAGS}", returnStdout: true)
+                        sh(script: "terraform apply -auto-approve tags='${TAGS}'", returnStdout: true)
                     }
                 }
             }
