@@ -26,7 +26,12 @@ pipeline {
                         dir("Solution-Files/Task1/Terraform/DEV") {
                             echo "Creating Resources on Developer Environment"
                             sh(script: "terraform init", returnStdout: true)
-                            sh(script: "terraform plan", returnStdout: true)
+                            sh(script: "terraform plan \
+                                        -var tags='${TAGS}' \
+                                        -var key_name='${KEY_NAME}' \
+                                        -var environment='${ENV}' \
+                                        -var instance_type='${INSTANCE_TYPE}' \
+                                        -var ami='${AMI}'", returnStdout: true)
                             sh(script: "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
                                         -var key_name='${KEY_NAME}' \
@@ -38,7 +43,12 @@ pipeline {
                         dir("Solution-Files/Task1/Terraform/QA") {
                             echo "Creating Resources on QA Environment"
                             sh(script: "terraform init", returnStdout: true)
-                            sh(script: "terraform plan", returnStdout: true)
+                            sh(script: "terraform plan \
+                                        -var tags='${TAGS}' \
+                                        -var key_name='${KEY_NAME}' \
+                                        -var environment='${ENV}' \
+                                        -var instance_type='${INSTANCE_TYPE}' \
+                                        -var ami='${AMI}'", returnStdout: true)
                             sh(script: "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
                                         -var key_name='${KEY_NAME}' \
@@ -50,7 +60,12 @@ pipeline {
                         dir("Solution-Files/Task1/Terraform/PROD") {
                             echo "Creating Resources on Production Environment"
                             sh(script: "terraform init", returnStdout: true)
-                            sh(script: "terraform plan", returnStdout: true)
+                            sh(script: "terraform plan \
+                                        -var tags='${TAGS}' \
+                                        -var key_name='${KEY_NAME}' \
+                                        -var environment='${ENV}' \
+                                        -var instance_type='${INSTANCE_TYPE}' \
+                                        -var ami='${AMI}'", returnStdout: true)
                             sh(script: "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
                                         -var key_name='${KEY_NAME}' \
@@ -62,7 +77,12 @@ pipeline {
                         dir("Solution-Files/Task1/Terraform/STAG") {
                             echo "Creating Resources on Staging Environment"
                             sh(script: "terraform init", returnStdout: true)
-                            sh(script: "terraform plan", returnStdout: true)
+                            sh(script: "terraform plan \
+                                        -var tags='${TAGS}' \
+                                        -var key_name='${KEY_NAME}' \
+                                        -var environment='${ENV}' \
+                                        -var instance_type='${INSTANCE_TYPE}' \
+                                        -var ami='${AMI}'", returnStdout: true)
                             sh(script: "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
                                         -var key_name='${KEY_NAME}' \
