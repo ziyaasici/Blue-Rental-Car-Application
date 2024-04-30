@@ -26,7 +26,7 @@ pipeline {
                             sh(script: "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
                                         -var key_name=${params.Environment}-Keypair \
-                                        -var environment=${params.Environment} \
+                                        -var environment='${params.Environment}' \
                                         -var instance_type=${params.InstanceType} \
                                         -var ami=${AMI}", returnStdout: true)
                         }
@@ -37,7 +37,7 @@ pipeline {
                             sh(script: "terraform plan", returnStdout: true)
                             sh(script: "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
-                                        -var key_name=${params.Environment}-Keypair \
+                                        -var key_name='${params.Environment}-Keypair' \
                                         -var environment=${params.Environment} \
                                         -var instance_type=${params.InstanceType} \
                                         -var ami=${AMI}", returnStdout: true)
