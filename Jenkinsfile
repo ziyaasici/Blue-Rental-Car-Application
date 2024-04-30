@@ -15,59 +15,63 @@ pipeline {
                 }
             }
         }
-        stage('Example Stage') {
+        stage('Create Resources') {
             steps {
                 script {
                     if (params.Environment == 'DEV') {
                         dir("Solution-Files/Task1/Terraform/DEV") {
-                            echo "Deploying to Developer environment"
-                            sh'pwd'
+                            echo "Creating Resources on Developer Environment"
                             sh(script: "terraform init", returnStdout: true)
                             sh(script: "terraform plan", returnStdout: true)
+                            sh(script: "terraform apply -auto-approve \
+                                        -var tags='${TAGS}' \
+                                        -var key_name=${params.Environment}-Keypair \
+                                        -var environment=${params.Environment} \
+                                        -var instance_type=${params.InstanceType} \
+                                        -var ami=${AMI}", returnStdout: true)
                         }
                     } else if (params.Environment == 'QA') {
                         dir("Solution-Files/Task1/Terraform/QA") {
-                            echo "Deploying to QA environment"
-                            sh'pwd'
+                            echo "Creating Resources on QA Environment"
                             sh(script: "terraform init", returnStdout: true)
                             sh(script: "terraform plan", returnStdout: true)
+                            sh(script: "terraform apply -auto-approve \
+                                        -var tags='${TAGS}' \
+                                        -var key_name=${params.Environment}-Keypair \
+                                        -var environment=${params.Environment} \
+                                        -var instance_type=${params.InstanceType} \
+                                        -var ami=${AMI}", returnStdout: true)
                         }
                     } else if (params.Environment == 'PROD') {
                         dir("Solution-Files/Task1/Terraform/PROD") {
-                            echo "Deploying to Production environment"
-                            sh'pwd'
+                            echo "Creating Resources on Production Environment"
                             sh(script: "terraform init", returnStdout: true)
                             sh(script: "terraform plan", returnStdout: true)
+                            sh(script: "terraform apply -auto-approve \
+                                        -var tags='${TAGS}' \
+                                        -var key_name=${params.Environment}-Keypair \
+                                        -var environment=${params.Environment} \
+                                        -var instance_type=${params.InstanceType} \
+                                        -var ami=${AMI}", returnStdout: true)
                         }
                     } else if (params.Environment == 'STAG') {
                         dir("Solution-Files/Task1/Terraform/STAG") {
-                            echo "Deploying to Staging environment"
-                            sh'pwd'
+                            echo "Creating Resources on Staging Environment"
                             sh(script: "terraform init", returnStdout: true)
                             sh(script: "terraform plan", returnStdout: true)
+                            sh(script: "terraform apply -auto-approve \
+                                        -var tags='${TAGS}' \
+                                        -var key_name=${params.Environment}-Keypair \
+                                        -var environment=${params.Environment} \
+                                        -var instance_type=${params.InstanceType} \
+                                        -var ami=${AMI}", returnStdout: true)
                         }
                     } else {
-                            error "Invalid environment selected"
+                            error "Invalid Environment Selected!"
                         }
                 }
             }
         }
-        // stage('Create Infrastructure') {
-        //     steps {
-        //         dir("Solution-Files/Task1/Terraform") {
-        //             script {
-        //                 sh(script: "terraform init", returnStdout: true)
-        //                 sh(script: "terraform plan", returnStdout: true)
-        //                 sh(script: "terraform apply -auto-approve \
-        //                             -var tags='${TAGS}' \
-        //                             -var key_name=${params.Environment}-Keypair \
-        //                             -var environment=${params.Environment} \
-        //                             -var instance_type=${params.InstanceType} \
-        //                             -var ami=${AMI}", returnStdout: true)
-        //             }
-        //         }
-        //     }
-        // }
     }
     post {
         failure {
