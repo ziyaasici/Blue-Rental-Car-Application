@@ -22,15 +22,14 @@ pipeline {
             steps {
                 script {
                     dir("Solution-Files/Task1/Terraform") {
-                        sh "terraform workspace select ${params.Environment} || terraform workspace new ${params.Environment}"
+                        sh(script: "terraform workspace select ${params.Environment} || terraform workspace new ${params.Environment}", returnStdout: true)
                         sh(script: "terraform init", returnStdout: true)
-                        sh "terraform plan"
-                        sh "terraform apply -auto-approve \
+                        sh(script: "terraform apply -auto-approve \
                                     -var tags='${TAGS}' \
                                     -var key_name='${KEY_NAME}' \
                                     -var environment='${ENV}' \
                                     -var instance_type='${INSTANCE_TYPE}' \
-                                    -var ami='${AMI}'"
+                                    -var ami='${AMI}'", returnStdout: true)
                     }
                 }
             }
