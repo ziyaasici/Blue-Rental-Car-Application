@@ -15,7 +15,7 @@ pipeline {
                         sh(script: "sudo chmod 400 ${params.Environment}-Keypair.pem", returnStatus: true)
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform plan", returnStdout: true)
-                        sh(script: "terraform apply -auto-approve -var 'instance_type=${params.InstanceType}' -var 'ami=${params.AMI}' -var key_name=${params.Environment}-Keypair -var tags={\'Name\':\'Blue-Rental-${params.Environment}\'}", returnStdout: true)
+                        sh(script: "terraform apply -auto-approve -var 'instance_type=${params.InstanceType}' -var 'ami=${params.AMI}' -var key_name=${params.Environment}-Keypair -var tags={'\Name'\:'\Blue-Rental-'${params.Environment}\}", returnStdout: true)
                     }
                 }
             }
