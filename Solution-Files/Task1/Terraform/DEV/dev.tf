@@ -1,12 +1,12 @@
 module "DEV" {
   source = "../modules"
-  environment = "test"
-  instance_type = "test"
-  ami = "test"
-  key_name = "test"
-  tags = {
-    Name = "test"
-  }
+  # environment = var.environment
+  # instance_type = var.instance_type
+  # ami = var.ami
+  # key_name = var.key_name
+  # tags = {
+  #   Name = "Blue-Rental-${var.environment}"
+  # }
 }
 
 # output "public_ip" {
