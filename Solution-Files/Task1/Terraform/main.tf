@@ -27,7 +27,7 @@ resource "aws_security_group" "test-sec-grp" {
 resource "aws_instance" "test-ec2" {
   instance_type = var.instance_type
   ami = var.ami
-  key_name = var.keypair
+  key_name = var.key_name
    vpc_security_group_ids = [aws_security_group.test-sec-grp.id]
   tags = {
     Name = "Blue-Rental-${var.environment}"
