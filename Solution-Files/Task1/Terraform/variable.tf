@@ -1,5 +1,5 @@
 variable "environment" {
-  default     = "BlueRental"
+  default = "DEV"
 }
 
 variable "instance_type" {
