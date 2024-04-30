@@ -3,7 +3,7 @@ module "DEV" {
   # environment = var.environment
   # instance_type = var.instance_type
   # ami = var.ami
-  # key_name = var.key_name
+  #key_name = ${params.}
   # tags = {
   #   Name = "Blue-Rental-${var.environment}"
   # }

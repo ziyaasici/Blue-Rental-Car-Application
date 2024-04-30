@@ -3,7 +3,11 @@ pipeline {
     environment {
         AWS_ACCESS=credentials('AWS-Jenkins')
         AWS_REGION = 'us-east-1'
+        ENV = "${params.Environment}"
         TAGS = "{\"Name\":\"Blue-Rental-${params.Environment}\"}"
+        AMI = "${params.AMI}"
+        INSTANCE_TYPE = "${params.InstanceType}"
+        KEY_NAME = "${params.Environment}-Keypair"
     }
     stages {
         stage('Create KeyPair') {
@@ -25,10 +29,10 @@ pipeline {
                             sh(script: "terraform plan", returnStdout: true)
                             sh(script: "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
-                                        -var key_name='${params.Environment}-Keypair' \
-                                        -var environment=${params.Environment} \
-                                        -var instance_type=${params.InstanceType} \
-                                        -var ami=${AMI}", returnStdout: true)
+                                        -var key_name='${KEY_NAME}' \
+                                        -var environment='${ENV}' \
+                                        -var instance_type='${INSTANCE_TYPE}' \
+                                        -var ami='${AMI}'", returnStdout: true)
                         }
                     } else if (params.Environment == 'QA') {
                         dir("Solution-Files/Task1/Terraform/QA") {
@@ -37,10 +41,10 @@ pipeline {
                             sh(script: "terraform plan", returnStdout: true)
                             sh(script: "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
-                                        -var key_name='${params.Environment}-Keypair' \
-                                        -var environment=${params.Environment} \
-                                        -var instance_type=${params.InstanceType} \
-                                        -var ami=${AMI}", returnStdout: true)
+                                        -var key_name='${KEY_NAME}' \
+                                        -var environment='${ENV}' \
+                                        -var instance_type='${INSTANCE_TYPE}' \
+                                        -var ami='${AMI}'", returnStdout: true)
                         }
                     } else if (params.Environment == 'PROD') {
                         dir("Solution-Files/Task1/Terraform/PROD") {
@@ -49,10 +53,10 @@ pipeline {
                             sh(script: "terraform plan", returnStdout: true)
                             sh(script: "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
-                                        -var key_name='${params.Environment}-Keypair' \
-                                        -var environment=${params.Environment} \
-                                        -var instance_type=${params.InstanceType} \
-                                        -var ami=${AMI}", returnStdout: true)
+                                        -var key_name='${KEY_NAME}' \
+                                        -var environment='${ENV}' \
+                                        -var instance_type='${INSTANCE_TYPE}' \
+                                        -var ami='${AMI}'", returnStdout: true)
                         }
                     } else if (params.Environment == 'STAG') {
                         dir("Solution-Files/Task1/Terraform/STAG") {
@@ -61,10 +65,10 @@ pipeline {
                             sh(script: "terraform plan", returnStdout: true)
                             sh(script: "terraform apply -auto-approve \
                                         -var tags='${TAGS}' \
-                                        -var key_name='${params.Environment}-Keypair' \
-                                        -var environment=${params.Environment} \
-                                        -var instance_type=${params.InstanceType} \
-                                        -var ami=${AMI}", returnStdout: true)
+                                        -var key_name='${KEY_NAME}' \
+                                        -var environment='${ENV}' \
+                                        -var instance_type='${INSTANCE_TYPE}' \
+                                        -var ami='${AMI}'", returnStdout: true)
                         }
                     } else {
                             error "Invalid Environment Selected!"
