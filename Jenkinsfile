@@ -17,7 +17,7 @@ pipeline {
 
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform plan", returnStdout: true)
-                        sh(script: 'terraform apply -auto-approve -var "tags=${TAGS}"', returnStdout: true)
+                        sh(script: 'terraform apply -auto-approve -var tags=${TAGS}', returnStdout: true)
                     }
                 }
             }
