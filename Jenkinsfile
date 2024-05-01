@@ -31,7 +31,7 @@ pipeline {
                                     -var environment='${ENV}' \
                                     -var instance_type='${INSTANCE_TYPE}' \
                                     -var ami='${AMI}' \
-                                    -var count=${COUNT}", returnStdout: true)
+                                    -var ec2_count=${COUNT}", returnStdout: true)
                     }
                 }
             }
