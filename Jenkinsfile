@@ -14,7 +14,9 @@ pipeline {
         stage('Create KeyPair') {
             steps {
                 script {
-                    sh(script: "aws ec2 create-key-pair --key-name ${params.Environment}-Keypair --region ${AWS_REGION} --query 'KeyMaterial' --output text > ${params.Environment}-Keypair.pem", returnStdout: true)
+                    sh(script: "aws ec2 describe-key-pairs --key-names ${params.Environment}-Keypair --region ${AWS_REGION} --query 'KeyPairs[0]' || \
+                                aws ec2 create-key-pair --key-name ${params.Environment}-Keypair --region ${AWS_REGION} --query 'KeyMaterial' \
+                                --output text > ${params.Environment}-Keypair.pem", returnStdout: true)
                     sh(script: "sudo chmod 400 ${params.Environment}-Keypair.pem", returnStatus: true)
                 }
             }
@@ -39,7 +41,7 @@ pipeline {
     }
     post {
         always {
-            timeout(time: 5, unit: 'MINUTES') {
+            timeout(time: 10, unit: 'MINUTES') {
                 dir("Solution-Files/Task1/Terraform") {
                     sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
                     sh(script: "terraform destroy -auto-approve", returnStdout: true)
