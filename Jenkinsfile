@@ -38,6 +38,22 @@ pipeline {
                 }
             }
         }
+        stage('Ansible Configurations') {
+            steps {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    credentialsId: 'AWS-Jenkins',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    dir("Ansible/${params.Environment}") {
+                        ansiblePlaybook(
+                            playbook: 'playbook.yml',
+                        )
+                    }
+                }
+            }
+        }
     }
     post {
         success {

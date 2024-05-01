@@ -1,0 +1,101 @@
+---
+- name: Update System Packages
+  hosts: _Blue-Rental-STAG
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Update system packages
+      yum:
+        name: '*'
+        state: latest
+      tags:
+        - update_system_packages
+
+    # - name: Remove old Docker versions
+    #   yum:
+    #     name:
+    #       - docker
+    #       - docker-client
+    #       - docker-client-latest
+    #       - docker-common
+    #       - docker-latest
+    #       - docker-latest-logrotate
+    #       - docker-logrotate
+    #       - docker-engine
+    #     state: absent
+    #   tags:
+    #     - remove_old_docker_versions
+
+    # - name: Install yum utilities
+    #   yum:
+    #     name: "{{ item }}"
+    #     state: present
+    #   loop:
+    #     - yum-utils
+    #     - device-mapper-persistent-data
+    #     - lvm2
+    #     - unzip
+    #   tags:
+    #     - install_yum_utilities
+
+    # - name: Install Docker
+    #   yum:
+    #     name: docker
+    #     state: latest
+    #   tags:
+    #     - install_docker
+
+    # - name: Add user to Docker group
+    #   user:
+    #     name: ec2-user
+    #     groups: docker
+    #   tags:
+    #     - add_user_to_docker_group
+
+    # - name: Start and enable Docker service
+    #   service:
+    #     name: docker
+    #     state: started
+    #     enabled: yes
+    #   tags:
+    #     - start_docker_service
+
+    # - name: Download and install Docker Compose
+    #   get_url:
+    #     url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64"
+    #     dest: /usr/local/bin/docker-compose
+    #     mode: '0755'
+    #   tags:
+    #     - install_docker_compose
+
+    # - name: AWS CLI Test
+    #   shell: |
+    #     aws s3 ls
+    #   environment:
+    #     AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+    #     AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    #   register: aws_cli_result
+    #   tags:
+    #     - aws_cli_test
+
+    # - name: Log in to AWS ECR
+    #   shell: |
+    #     aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 621627302500.dkr.ecr.us-east-1.amazonaws.com
+    #   environment:
+    #     AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+    #     AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    #   register: aws_cli_result
+    #   tags:
+    #     - login_to_aws_ecr
+
+    # - name: Copy docker-compose.yml to server
+    #   copy:
+    #     src: /usr/jenkins/workspace/Jenkins-Project/apps/docker-compose.yml
+    #     dest: /home/ec2-user/docker-compose.yml
+    #   tags:
+    #     - copy_docker_compose_to_server
+
+    # - name: Start application with Docker Compose
+    #   shell: "docker-compose -f /home/ec2-user/docker-compose.yml up -d"
+    #   tags:
+    #     - start_application_with_docker_compose
