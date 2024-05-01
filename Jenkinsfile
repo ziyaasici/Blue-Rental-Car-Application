@@ -41,7 +41,7 @@ pipeline {
         stage('Wait for EC2s') {
             steps {
                 script {
-                    def awsCommand = "aws ec2 describe-instances --filters Name=tag:Name,Values=${TAGS} Name=instance-state-name,Values=running --region ${AWS_REGION} --query 'Reservations[*].Instances[*].InstanceId' --output text"
+                    def awsCommand = "aws ec2 describe-instances --filters Name=tag:Name,Values='Blue-Rental-${params.Environment}' Name=instance-state-name,Values=running --region ${AWS_REGION} --query 'Reservations[*].Instances[*].InstanceId' --output text"
                     
                     def instanceId = sh(script: awsCommand, returnStdout: true).trim()
                     println "EC2 Instance ID: ${instanceId}"
