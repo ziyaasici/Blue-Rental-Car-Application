@@ -1,8 +1,8 @@
-- GitHub Private Repo Olusturuldu
-- Proje Dosyalarini clone et ve pushla
-- Terraform Workspace Kullanildi - Module yerini (Dev, QA, Staging, PROD)
+- GitHub Private Repo Created.
+- Project files cloned and pushed.
+- Terraform Workspace Used - Instead of Modules (Dev, QA, Staging, PROD).
     - "terraform workspace select ${params.Environment} || terraform workspace new ${params.Environment}"
-- Jenkins pipeline da Parametirize kullanilacak ve secilen ortama uygun olan config. le ortam hazirlanacak.
+- Jenkins pipeline Parametirize option used.
     - Github Credentials for Jenkins integrated.
 - Solution files are created.
     - Jenkinsfile
