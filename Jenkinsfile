@@ -46,7 +46,7 @@ pipeline {
                     credentialsId: 'AWS-Jenkins',
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
-                    dir("Ansible/${params.Environment}") {
+                    dir("Solution-Files/Task2/Ansible/${params.Environment}") {
                         ansiblePlaybook(
                             playbook: 'playbook.yml',
                         )
