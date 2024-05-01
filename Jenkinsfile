@@ -38,6 +38,28 @@ pipeline {
                 }
             }
         }
+        stage('Wait for EC2s') {
+            steps {
+                script {
+                    def awsCommand = "aws ec2 describe-instances --filters Name=tag:Name,Values=${TAGS} Name=instance-state-name,Values=running --region ${AWS_REGION} --query 'Reservations[*].Instances[*].InstanceId' --output text"
+                    
+                    def instanceId = sh(script: awsCommand, returnStdout: true).trim()
+                    println "EC2 Instance ID: ${instanceId}"
+                    
+                    def ec2State = ''
+                    timeout(time: 10, unit: 'MINUTES') {
+                        while (ec2State != 'running') {
+                            def instanceStateCmd = "aws ec2 describe-instance-status --instance-ids ${instanceId} --region ${AWS_REGION} --query 'InstanceStatuses[0].InstanceState.Name' --output text"
+                            ec2State = sh(script: instanceStateCmd, returnStdout: true).trim()
+                            if (ec2State != 'running') {
+                                println "EC2 instance is not running yet. Waiting..."
+                                sleep time: 30, unit: 'SECONDS'
+                            }
+                        }
+                    }
+                }
+            }
+        }
         stage('Ansible Configurations') {
             steps {
                 withCredentials([[
