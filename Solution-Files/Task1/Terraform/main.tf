@@ -29,7 +29,7 @@ resource "aws_instance" "ec2" {
   ami = var.ami
   # ami = terraform.workspace != "PROD" ? lookup(var.ami, terraform.workspace) : data.aws_ami.al2023.id
   key_name = var.key_name
-  count = var.count
+  count = var.ec2_count
   vpc_security_group_ids = [aws_security_group.ec2-sec-grp.id]
   tags = {
     Name = "Blue-Rental-${var.environment}"
