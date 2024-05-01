@@ -49,7 +49,7 @@ pipeline {
                     def ec2State = ''
                     timeout(time: 10, unit: 'MINUTES') {
                         while (ec2State != 'running') {
-                            def instanceStateCmd = "aws ec2 describe-instance-status --instance-ids ${instanceId} --region ${AWS_REGION} --query 'InstanceStatuses[0].InstanceState.Name' --output text"
+                            def instanceStateCmd = "aws ec2 describe-instance-status --instance-ids ${instanceId} --region ${AWS_REGION} --query 'InstanceStatuses[*].InstanceState.Name' --output text"
                             ec2State = sh(script: instanceStateCmd, returnStdout: true).trim()
                             if (ec2State != 'running') {
                                 println "EC2 instance is not running yet. Waiting..."
