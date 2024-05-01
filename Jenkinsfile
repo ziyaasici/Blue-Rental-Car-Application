@@ -44,5 +44,13 @@ pipeline {
                 sh(script: "terraform destroy -auto-approve", returnStdout: true)
             }
         }
+        always {
+            timeout(time: 5, unit: 'MINUTES') {
+                dir("Solution-Files/Task1/Terraform") {
+                    sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
+                    sh(script: "terraform destroy -auto-approve", returnStdout: true)
+                }
+            }
+        }
     }
 }
