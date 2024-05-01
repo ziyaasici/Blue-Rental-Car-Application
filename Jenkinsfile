@@ -40,7 +40,7 @@ pipeline {
         }
     }
     post {
-        always {
+        success {
             timeout(time: 10, unit: 'MINUTES') {
                 dir("Solution-Files/Task1/Terraform") {
                     sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
