@@ -8,6 +8,7 @@ pipeline {
         AMI = "${params.AMI}"
         INSTANCE_TYPE = "${params.InstanceType}"
         KEY_NAME = "${params.Environment}-Keypair"
+        COUNT = "${params.InstanceCount}"
     }
     stages {
         stage('Create KeyPair') {
@@ -29,7 +30,8 @@ pipeline {
                                     -var key_name='${KEY_NAME}' \
                                     -var environment='${ENV}' \
                                     -var instance_type='${INSTANCE_TYPE}' \
-                                    -var ami='${AMI}'", returnStdout: true)
+                                    -var ami='${AMI}' \
+                                    -var count=${COUNT}", returnStdout: true)
                     }
                 }
             }

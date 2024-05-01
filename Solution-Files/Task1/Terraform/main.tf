@@ -1,4 +1,4 @@
-resource "aws_security_group" "test-sec-grp" {
+resource "aws_security_group" "ec2-sec-grp" {
   name        = "${var.environment}-Sec-Grp"
   description = "${var.environment} Security Group"
   tags = {
@@ -12,7 +12,7 @@ resource "aws_security_group" "test-sec-grp" {
       from_port   = ingress.value
       to_port     = ingress.value
       protocol    = "TCP"
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = var.cidr
     }
   }
 
@@ -20,15 +20,17 @@ resource "aws_security_group" "test-sec-grp" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.cidr
   }
 }
 
-resource "aws_instance" "test-ec2" {
+resource "aws_instance" "ec2" {
   instance_type = var.instance_type
   ami = var.ami
+  # ami = terraform.workspace != "PROD" ? lookup(var.ami, terraform.workspace) : data.aws_ami.al2023.id
   key_name = var.key_name
-  vpc_security_group_ids = [aws_security_group.test-sec-grp.id]
+  count = var.number_of_instance
+  vpc_security_group_ids = [aws_security_group.ec2-sec-grp.id]
   tags = {
     Name = "Blue-Rental-${var.environment}"
   }
