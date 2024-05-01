@@ -25,7 +25,7 @@ variable "key_name" {
   default = "DEFAULT"
 }
 
-variable "number_of_instance" {
+variable "count" {
   default = 1
 }
 
