@@ -92,5 +92,5 @@ pipeline {
     //             sh(script: "terraform destroy -auto-approve", returnStdout: true)
     //         }
     //     }
-    // }
+    }
 }
