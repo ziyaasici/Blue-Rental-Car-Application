@@ -38,6 +38,15 @@ pipeline {
                 }
             }
         }
+        stage('Wait for Resources') {
+            steps {
+                script {
+                    echo 'Waiting for resources to get ready'
+                    id = sh(script: "aws ec2 describe-instances --filters Name=tag-value,Values='Blue-Rental-${params.Environment}' Name=instance-state-name,Values=running --query Reservations[*].Instances[*].[InstanceId] --output text",  returnStdout:true).trim()
+                    sh 'aws ec2 wait instance-status-ok --instance-ids $id'
+                }
+            }
+        }
         // stage('Wait for EC2s') {
         //     steps {
         //         script {
