@@ -48,13 +48,15 @@ pipeline {
                 }
             }
         }
-        stage('Ansible Configurations') {
+        stage('Check Paths') {
             steps {
                 script {
                     sh 'echo Workspace path: ${WORKSPACE}'
                     sh 'echo Environment parameter: ${params.Environment}'
                 }
             }
+        }
+        stage('Ansible Configurations') {
             steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
