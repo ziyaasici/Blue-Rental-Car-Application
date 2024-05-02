@@ -50,6 +50,12 @@ pipeline {
         }
         stage('Ansible Configurations') {
             steps {
+                script {
+                    sh 'echo Workspace path: ${WORKSPACE}'
+                    sh 'echo Environment parameter: ${params.Environment}'
+                }
+            }
+            steps {
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
@@ -59,7 +65,7 @@ pipeline {
                     dir("Solution-Files/Task2/Ansible/${params.Environment}") {
                         ansiblePlaybook(
                             playbook: 'playbook.yml',
-                            extras: '--private-key=${env.WORKSPACE}/${params.Environment}-Keypair.pem'
+                            extras: '--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem'
                         )
                     }
                 }
