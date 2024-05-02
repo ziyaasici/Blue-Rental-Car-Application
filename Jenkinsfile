@@ -9,6 +9,7 @@ pipeline {
         INSTANCE_TYPE = "${params.InstanceType}"
         KEY_NAME = "${params.Environment}-Keypair"
         COUNT = "${params.InstanceCount}"
+        ANSIBLE_PRIVATE_KEY_FILE = "${WORKSPACE}/${params.Environment}-Keypair.pem"
     }
     stages {
         stage('Create KeyPair') {
@@ -47,20 +48,25 @@ pipeline {
                 }
             }
         }
-        stage('Ansible Configurations') {
+        // stage('Ansible Configurations') {
+        //     steps {
+        //         withCredentials([[
+        //             $class: 'AmazonWebServicesCredentialsBinding',
+        //             accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+        //             credentialsId: 'AWS-Jenkins',
+        //             secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        //         ]]) {
+        //             dir("Solution-Files/Task2/Ansible/${params.Environment}") {
+        //                 ansiblePlaybook(
+        //                     playbook: 'playbook.yml',
+        //                 )
+        //             }
+        //         }
+        //     }
+        // }
+        stage('Ansible Configuration') {
             steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    credentialsId: 'AWS-Jenkins',
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                ]]) {
-                    dir("Solution-Files/Task2/Ansible/${params.Environment}") {
-                        ansiblePlaybook(
-                            playbook: 'playbook.yml',
-                        )
-                    }
-                }
+                sh "ansible-playbook -i inventory playbook.yml --private-key=${env.ANSIBLE_PRIVATE_KEY_FILE}"
             }
         }
     }
