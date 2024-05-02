@@ -48,14 +48,6 @@ pipeline {
                 }
             }
         }
-        stage('Check Paths') {
-            steps {
-                script {
-                    sh 'echo Workspace path: ${WORKSPACE}'
-                    sh 'echo Environment parameter: ${params.Environment}'
-                }
-            }
-        }
         stage('Ansible Configurations') {
             steps {
                 withCredentials([[
@@ -67,7 +59,7 @@ pipeline {
                     dir("Solution-Files/Task2/Ansible/${params.Environment}") {
                         ansiblePlaybook(
                             playbook: 'playbook.yml',
-                            extras: '--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem'
+                            extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem"
                         )
                     }
                 }
