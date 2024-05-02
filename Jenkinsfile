@@ -1,11 +1,14 @@
 pipeline {
+
     agent { label 'Linux' } 
+
     parameters {
         choice(name: 'Environment', choices: ['DEV', 'PROD', 'QA', 'STAG'], description: 'Environment to create resources on')
         choice(name: 'InstanceType', choices: ['t2.micro', 't3.medium'], description: 'Instance Type for EC2')
         choice(name: 'AMI', choices: ['ami-07caf09b362be10b8', 'ami-0a1179631ec8933d7'], description: 'AMI for EC2')
         choice(name: 'InstanceCount', choices: ['1', '2', '3', '4', '5'], description: 'Number of EC2 instances to deploy')
     }
+
     environment {
         AWS_ACCESS=credentials('AWS-Jenkins')
         AWS_REGION = 'us-east-1'
@@ -17,6 +20,7 @@ pipeline {
         COUNT = "${params.InstanceCount}"
         ANSIBLE_PRIVATE_KEY_FILE = "${WORKSPACE}/${params.Environment}-Keypair.pem"
     }
+
     stages {
         stage('Create KeyPair') {
             steps {
@@ -66,6 +70,7 @@ pipeline {
             }
         }
     }
+    
     post {
         success {
             timeout(time: 5, unit: 'MINUTES') {
