@@ -66,7 +66,7 @@ pipeline {
         // }
         stage('Ansible Configuration') {
             steps {
-                sh "ansible-playbook -i inventory playbook.yml --private-key=${env.ANSIBLE_PRIVATE_KEY_FILE}"
+                sh "ansible-playbook playbook.yml --private-key=${env.ANSIBLE_PRIVATE_KEY_FILE}"
             }
         }
     }
