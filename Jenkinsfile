@@ -50,26 +50,22 @@ pipeline {
         }
         stage('Ansible Configurations') {
             steps {
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    credentialsId: 'AWS-Jenkins',
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                ]]) {
+                // withCredentials([[
+                //     $class: 'AmazonWebServicesCredentialsBinding',
+                //     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                //     credentialsId: 'AWS-Jenkins',
+                //     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                // ]]) {
                     dir("Solution-Files/Task2/Ansible/${params.Environment}") {
                         ansiblePlaybook(
                             playbook: 'playbook.yml',
+                            inventory: "${WORKSPACE}/Solution-Files/Task2/Ansible/${params.Environment}/inventory_aws_ec2.yml",
                             extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem"
                         )
                     }
-                }
+                // }
             }
         }
-        // stage('Ansible Configuration') {
-        //     steps {
-        //         sh "ansible-playbook playbook.yml --private-key=${env.ANSIBLE_PRIVATE_KEY_FILE}"
-        //     }
-        // }
     }
     post {
         success {
