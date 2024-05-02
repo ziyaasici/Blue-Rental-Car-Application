@@ -1,6 +1,6 @@
 ---
 - name: Update System Packages
-  hosts: _Blue_Rental_PROD
+  hosts: _Blue_Rental_DEV
   gather_facts: no
   become: yes
   tasks:

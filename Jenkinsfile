@@ -60,37 +60,37 @@ pipeline {
                 }
             }
         }
-    //     stage('Ansible Configurations') {
-    //         steps {
-    //             withCredentials([[
-    //                 $class: 'AmazonWebServicesCredentialsBinding',
-    //                 accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-    //                 credentialsId: 'AWS-Jenkins',
-    //                 secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-    //             ]]) {
-    //                 dir("Solution-Files/Task2/Ansible/${params.Environment}") {
-    //                     ansiblePlaybook(
-    //                         playbook: 'playbook.yml',
-    //                     )
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-    // post {
-    //     success {
-    //         timeout(time: 5, unit: 'MINUTES') {
-    //             dir("Solution-Files/Task1/Terraform") {
-    //                 sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
-    //                 sh(script: "terraform destroy -auto-approve", returnStdout: true)
-    //             }
-    //         }
-    //     }
-    //     failure {
-    //         dir("Solution-Files/Task1/Terraform") {
-    //             sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
-    //             sh(script: "terraform destroy -auto-approve", returnStdout: true)
-    //         }
-    //     }
+        stage('Ansible Configurations') {
+            steps {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    credentialsId: 'AWS-Jenkins',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
+                    dir("Solution-Files/Task2/Ansible/${params.Environment}") {
+                        ansiblePlaybook(
+                            playbook: 'playbook.yml',
+                        )
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            timeout(time: 5, unit: 'MINUTES') {
+                dir("Solution-Files/Task1/Terraform") {
+                    sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
+                    sh(script: "terraform destroy -auto-approve", returnStdout: true)
+                }
+            }
+        }
+        failure {
+            dir("Solution-Files/Task1/Terraform") {
+                sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
+                sh(script: "terraform destroy -auto-approve", returnStdout: true)
+            }
+        }
     }
 }

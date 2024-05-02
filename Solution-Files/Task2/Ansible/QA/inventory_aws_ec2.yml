@@ -2,7 +2,7 @@ plugin: aws_ec2
 regions:
   - "us-east-1"
 filters:
-  tag:Name: Blue-Rental-STAG
+  tag:Name: Blue-Rental-QA
 keyed_groups:
   - key: tags.Name
 compose:
