@@ -58,33 +58,22 @@ pipeline {
                 }
             }
         }
-        // stage('Ansible Configurations') {
-        //     steps {
-        //         dir("Solution-Files/Task2/Ansible/${params.Environment}") {
-        //             ansiblePlaybook(
-        //                 playbook: 'playbook.yml',
-        //                 inventory: "${WORKSPACE}/Solution-Files/Task2/Ansible/${params.Environment}/inventory_aws_ec2.yml",
-        //                 extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem"
-        //             )
-        //         }
-        //     }
-        // }
-        stage('Ansible Dynamic Configurations') {
+        stage('Ansible Configurations') {
             steps {
-                dir("Solution-Files/Task2/Ansible2/") {
-                    script {
-                        env.TAG_NAME = "Blue-Rental-${params.Environment}"
-                        sh "ansible-playbook ${params.Environment}-playbook.yml -i ${WORKSPACE}/Solution-Files/Task2/Ansible2/inventory_aws_ec2.yml --extra-vars 'tag_name=${env.TAG_NAME}'"
-                    }
-                }
                 // dir("Solution-Files/Task2/Ansible2/") {
-                //     ansiblePlaybook(
-                //         playbook: "${params.Environment}-playbook.yml",
-                //         inventory: "${WORKSPACE}/Solution-Files/Task2/Ansible2/inventory_aws_ec2.yml",
-                //         extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem \
-                //                  --extra-vars 'tag_name=Blue-Rental-${params.Environment}'"
-                //     )
+                //     script {
+                //         env.TAG_NAME = "Blue-Rental-${params.Environment}"
+                //         sh "ansible-playbook ${params.Environment}-playbook.yml -i ${WORKSPACE}/Solution-Files/Task2/Ansible2/inventory_aws_ec2.yml --extra-vars 'tag_name=${env.TAG_NAME}'"
+                //     }
                 // }
+                dir("Solution-Files/Task2/Ansible2/") {
+                    ansiblePlaybook(
+                        playbook: "${params.Environment}-playbook.yml",
+                        inventory: "${WORKSPACE}/Solution-Files/Task2/Ansible2/inventory_aws_ec2.yml",
+                        extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem \
+                                 --extra-vars 'tag_name=Blue-Rental-${params.Environment}'"
+                    )
+                }
             }
         }
     }
