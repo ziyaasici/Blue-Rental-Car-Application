@@ -1,6 +1,6 @@
 ---
 - name: Update System Packages
-  hosts: "{{ tag_name }}"
+  hosts: "{{ host_name }}"
   gather_facts: no
   become: yes
   tasks:
