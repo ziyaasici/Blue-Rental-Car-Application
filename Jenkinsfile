@@ -72,6 +72,12 @@ pipeline {
         stage('Ansible Dynamic Configurations') {
             steps {
                 dir("Solution-Files/Task2/Ansible2/") {
+                    script {
+                        echo "Environment is: ${params.Environment}"
+                        echo "Tag name will be: Blue-Rental-${params.Environment}"
+                    }
+                }
+                dir("Solution-Files/Task2/Ansible2/") {
                     ansiblePlaybook(
                         playbook: "${params.Environment}-playbook.yml",
                         inventory: "${WORKSPACE}/Solution-Files/Task2/Ansible2/inventory_aws_ec2.yml",
