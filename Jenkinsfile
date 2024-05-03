@@ -73,18 +73,18 @@ pipeline {
             steps {
                 dir("Solution-Files/Task2/Ansible2/") {
                     script {
-                        echo "Environment is: ${params.Environment}"
-                        echo "Tag name will be: Blue-Rental-${params.Environment}"
+                        env.TAG_NAME = "Blue-Rental-${params.Environment}"
+                        sh "ansible-playbook ${params.Environment}-playbook.yml -i ${WORKSPACE}/Solution-Files/Task2/Ansible2/inventory_aws_ec2.yml --extra-vars 'tag_name=${env.TAG_NAME}'"
                     }
                 }
-                dir("Solution-Files/Task2/Ansible2/") {
-                    ansiblePlaybook(
-                        playbook: "${params.Environment}-playbook.yml",
-                        inventory: "${WORKSPACE}/Solution-Files/Task2/Ansible2/inventory_aws_ec2.yml",
-                        extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem \
-                                 --extra-vars 'tag_name=Blue-Rental-${params.Environment}'"
-                    )
-                }
+                // dir("Solution-Files/Task2/Ansible2/") {
+                //     ansiblePlaybook(
+                //         playbook: "${params.Environment}-playbook.yml",
+                //         inventory: "${WORKSPACE}/Solution-Files/Task2/Ansible2/inventory_aws_ec2.yml",
+                //         extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem \
+                //                  --extra-vars 'tag_name=Blue-Rental-${params.Environment}'"
+                //     )
+                // }
             }
         }
     }
