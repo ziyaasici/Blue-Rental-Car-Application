@@ -71,7 +71,7 @@ pipeline {
         // }
         stage('Ansible Dynamic Configurations') {
             steps {
-                dir("Solution-Files/Task2/Ansible2/${params.Environment}") {
+                dir("Solution-Files/Task2/Ansible2/") {
                     ansiblePlaybook(
                         playbook: 'playbook.yml',
                         inventory: "${WORKSPACE}/Solution-Files/Task2/Ansible2/inventory_aws_ec2.yml",
