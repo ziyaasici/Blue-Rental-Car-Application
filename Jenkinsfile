@@ -71,10 +71,10 @@ pipeline {
         // }
         stage('Ansible Dynamic Configurations') {
             steps {
-                dir("Solution-Files/Task2/Ansible/${params.Environment}") {
+                dir("Solution-Files/Task2/Ansible2/${params.Environment}") {
                     ansiblePlaybook(
                         playbook: 'playbook.yml',
-                        inventory: "${WORKSPACE}/Solution-Files/Task2/Ansible/${params.Environment}/inventory_aws_ec2.yml",
+                        inventory: "${WORKSPACE}/Solution-Files/Task2/Ansible2/${params.Environment}/inventory_aws_ec2.yml",
                         extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem --extra-vars 'tag_name=Blue-Rental${params.Environment}'"
                     )
                 }
