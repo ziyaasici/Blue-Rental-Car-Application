@@ -3,6 +3,8 @@
   hosts: _Blue_Rental_DEV
   gather_facts: no
   become: yes
+  remote_user: ec2-user
+
   tasks:
     - name: Update system packages
       yum:
