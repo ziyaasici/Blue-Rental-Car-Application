@@ -63,9 +63,7 @@ pipeline {
                 dir("Solution-Files/Task2/Ansible/") {
                     ansiblePlaybook(
                         playbook: "${params.Environment}-playbook.yml",
-                        inventory: "${WORKSPACE}/Solution-Files/Task2/Ansible/inventory_aws_ec2.yml",
-                        extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem \
-                                 --extra-vars 'tag_name=Blue-Rental-${params.Environment}'"
+                        extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem"
                     )
                 }
             }

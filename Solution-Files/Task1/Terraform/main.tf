@@ -32,6 +32,7 @@ resource "aws_instance" "ec2" {
   count = var.ec2_count
   vpc_security_group_ids = [aws_security_group.ec2-sec-grp.id]
   tags = {
+    Project = "Blue-Rental-Car-Application-Project"
     Name = "Blue-Rental-${var.environment}"
   }
 }
