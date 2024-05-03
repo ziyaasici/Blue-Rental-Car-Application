@@ -62,7 +62,7 @@ pipeline {
             steps {
                 dir("Solution-Files/Task2/Ansible/") {
                     ansiblePlaybook(
-                        playbook: "${params.Environment}-playbook.yml",
+                        playbook: "${params.Environment}-playbook.yml", 
                         extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem"
                     )
                 }
