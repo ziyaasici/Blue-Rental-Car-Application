@@ -77,7 +77,7 @@ pipeline {
                         inventory: "${WORKSPACE}/Solution-Files/Task2/Ansible2/inventory_aws_ec2.yml",
                         extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem \
                                  --extra-vars 'tag_name=Blue-Rental-${params.Environment}' \
-                                              'host_name=_Blue_Rental_${params.Environment}'"
+                                 --extra-vars 'host_name=_Blue_Rental_${params.Environment}'"
                     )
                 }
             }
