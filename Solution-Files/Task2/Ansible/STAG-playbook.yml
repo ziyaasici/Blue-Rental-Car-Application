@@ -33,14 +33,20 @@
         name: "{{ item }}"
         state: present
       loop:
-        - yum-utils
-        - device-mapper-persistent-data
-        - lvm2
-        - unzip
+        - git
+        - docker
         - python3-pip
+        - python3-devel
+        - yum-utils
+        - shadow-utils
       tags:
         - install_yum_utilities
 
+    - name: Upgrade system packages
+      dnf:
+        name: '*'
+        state: latest
+        
     - name: Install Docker
       yum:
         name: docker
@@ -63,6 +69,11 @@
       tags:
         - start_docker_service
 
+    - name: Restart Docker service
+      service:
+        name: docker
+        state: restarted
+        
     - name: Download and install Docker Compose
       get_url:
         url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64"

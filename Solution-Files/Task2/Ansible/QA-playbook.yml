@@ -33,14 +33,20 @@
         name: "{{ item }}"
         state: present
       loop:
-        - yum-utils
-        - device-mapper-persistent-data
-        - lvm2
-        - unzip
+        - git
+        - docker
         - python3-pip
+        - python3-devel
+        - yum-utils
+        - shadow-utils
       tags:
         - install_yum_utilities
 
+    - name: Upgrade system packages
+      dnf:
+        name: '*'
+        state: latest
+        
     - name: Install Docker
       yum:
         name: docker
@@ -63,6 +69,11 @@
       tags:
         - start_docker_service
 
+    - name: Restart Docker service
+      service:
+        name: docker
+        state: restarted
+        
     - name: Download and install Docker Compose
       get_url:
         url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64"
@@ -95,8 +106,12 @@
       copy:
         src: /usr/jenkins/workspace/Blue-Rental-Car-Project/Solution-Files/Task3/apps/docker-compose.yml
         dest: /home/ec2-user/docker-compose.yml
+        tags:
+        - copy compose to ec2-user
         
     - name: Start Docker Compose
-      command: docker-compose up -d
+      command: docker-compose up -d --build
       args:
         chdir: /home/ec2-user/
+        tags:
+        - compose up
