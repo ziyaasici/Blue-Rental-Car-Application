@@ -2,11 +2,11 @@ FROM node:14
 
 WORKDIR /app
 
-COPY ./client/package*.json ./
+COPY ./package*.json ./
 
 RUN yarn install
 
-COPY ./client/ .
+COPY ./ .
 
 EXPOSE 3000
 
