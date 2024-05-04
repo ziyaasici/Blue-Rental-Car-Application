@@ -78,7 +78,18 @@ pipeline {
                 }
             }
         }
+        stage('Build Images') {
+            steps {
+                dir("Solution-Files/Task3/apps/postgresql") {
+                    script {
+                        // sh(script: 'docker build -t nodejs:v1 .', returnStdout: true)
+                        sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:postgresv1" .', returnStdout: true)
+                    }
+                }
+            }
+        }
     }
+
 
     post {
         success {
