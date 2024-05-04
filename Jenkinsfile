@@ -103,7 +103,7 @@ pipeline {
                 }
             }
         }
-        stage('Ansible Configurations') {
+        stage('Deploy w/Ansible') {
             steps {
                 dir("Solution-Files/Task2/Ansible/") {
                     ansiblePlaybook(
