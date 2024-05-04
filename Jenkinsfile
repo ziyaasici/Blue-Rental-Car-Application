@@ -90,6 +90,11 @@ pipeline {
                         sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:reactv1" .', returnStdout: true)
                     }
                 }
+                dir("Solution-Files/Task3/apps/bluerentalcars-backend") {
+                    script {
+                        sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:javav1" .', returnStdout: true)
+                    }
+                }
             }
         }
         stage('Push Images') {
@@ -98,6 +103,7 @@ pipeline {
                     sh(script: 'aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin "$ECR_REGISTRY"', returnStdout: true)
                     sh(script: 'docker push "$ECR_REGISTRY/$APP_REPO_NAME:postgresqlv1"', returnStdout: true)
                     sh(script: 'docker push "$ECR_REGISTRY/$APP_REPO_NAME:reactv1"', returnStdout: true)
+                    sh(script: 'docker push "$ECR_REGISTRY/$APP_REPO_NAME:javav1"', returnStdout: true)
                 }
             }
         }
@@ -110,6 +116,7 @@ pipeline {
                 dir("Solution-Files/Task1/Terraform") {
                     sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
                     // sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME}", returnStdout: true)
+                    // sh(script: "docker image prune -af", returnStdout: true)
                     sh(script: "terraform destroy -auto-approve", returnStdout: true)
                 }
             }
@@ -118,6 +125,7 @@ pipeline {
             dir("Solution-Files/Task1/Terraform") {
                 sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
                 // sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME}", returnStdout: true)
+                // sh(script: "docker image prune -af", returnStdout: true)
                 sh(script: "terraform destroy -auto-approve", returnStdout: true)
             }
         }
