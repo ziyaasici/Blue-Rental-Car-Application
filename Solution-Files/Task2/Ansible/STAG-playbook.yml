@@ -37,6 +37,7 @@
         - device-mapper-persistent-data
         - lvm2
         - unzip
+        - python3-pip
       tags:
         - install_yum_utilities
 
