@@ -56,16 +56,6 @@ pipeline {
                 }
             }
         }
-        stage('Ansible Configurations') {
-            steps {
-                dir("Solution-Files/Task2/Ansible/") {
-                    ansiblePlaybook(
-                        playbook: "${params.Environment}-playbook.yml", 
-                        extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem"
-                    )
-                }
-            }
-        }
         stage('Create ECR') {
             steps {
                 script {
@@ -110,6 +100,16 @@ pipeline {
                     sh(script: 'docker push "$ECR_REGISTRY/$APP_REPO_NAME:postgresqlv1"', returnStdout: true)
                     sh(script: 'docker push "$ECR_REGISTRY/$APP_REPO_NAME:reactv1"', returnStdout: true)
                     sh(script: 'docker push "$ECR_REGISTRY/$APP_REPO_NAME:javav1"', returnStdout: true)
+                }
+            }
+        }
+        stage('Ansible Configurations') {
+            steps {
+                dir("Solution-Files/Task2/Ansible/") {
+                    ansiblePlaybook(
+                        playbook: "${params.Environment}-playbook.yml", 
+                        extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem"
+                    )
                 }
             }
         }
