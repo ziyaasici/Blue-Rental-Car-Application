@@ -127,13 +127,13 @@ pipeline {
         //         }
         //     }
         // }
-        failure {
-            dir("Solution-Files/Task1/Terraform") {
-                sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
-                sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force", returnStdout: true)
-                sh(script: "docker image prune -af", returnStdout: true)
-                sh(script: "terraform destroy -auto-approve", returnStdout: true)
-            }
-        }
+        // failure {
+        //     dir("Solution-Files/Task1/Terraform") {
+        //         sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
+        //         sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force", returnStdout: true)
+        //         sh(script: "docker image prune -af", returnStdout: true)
+        //         sh(script: "terraform destroy -auto-approve", returnStdout: true)
+        //     }
+        // }
     }
 }
