@@ -12,13 +12,14 @@ pipeline {
     environment {
         AWS_ACCESS=credentials('AWS-Jenkins')
         AWS_REGION = 'us-east-1'
-        ENV = "${params.Environment}"
+        // ENV = "${params.Environment}"
         TAGS = "{\"Name\":\"Blue-Rental-${params.Environment}\"}"
-        AMI = "${params.AMI}"
-        INSTANCE_TYPE = "${params.InstanceType}"
-        KEY_NAME = "${params.Environment}-Keypair"
-        COUNT = "${params.InstanceCount}"
-        ANSIBLE_PRIVATE_KEY_FILE = "${WORKSPACE}/${params.Environment}-Keypair.pem"
+        // AMI = "${params.AMI}"
+        // INSTANCE_TYPE = "${params.InstanceType}"
+        // KEY_NAME = "${params.Environment}-Keypair"
+        // COUNT = "${params.InstanceCount}"
+        // ANSIBLE_PRIVATE_KEY_FILE = "${WORKSPACE}/${params.Environment}-Keypair.pem"
+        APP_REPO_NAME = "ziyaasici/blue-rental-car"
     }
 
     stages {
@@ -40,11 +41,11 @@ pipeline {
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform apply -auto-approve \
                                     -var tags='${TAGS}' \
-                                    -var key_name='${KEY_NAME}' \
-                                    -var environment='${ENV}' \
-                                    -var instance_type='${INSTANCE_TYPE}' \
-                                    -var ami='${AMI}' \
-                                    -var ec2_count=${COUNT}", returnStdout: true)
+                                    -var key_name='${params.Environment}-Keypair' \
+                                    -var environment='${params.Environment}' \
+                                    -var instance_type='${params.InstanceType}' \
+                                    -var ami='${params.AMI}' \
+                                    -var ec2_count=${params.InstanceCount}", returnStdout: true)
                     }
                 }
             }
@@ -53,7 +54,8 @@ pipeline {
             steps {
                 script {
                     echo 'Waiting for resources to get ready'
-                    id = sh(script: "aws ec2 describe-instances --filters Name=tag-value,Values='Blue-Rental-${params.Environment}' Name=instance-state-name,Values=running --query Reservations[*].Instances[*].[InstanceId] --output text",  returnStdout:true).trim()
+                    id = sh(script: "aws ec2 describe-instances --filters Name=tag-value,Values='Blue-Rental-${params.Environment}' \
+                                    Name=instance-state-name,Values=running --query Reservations[*].Instances[*].[InstanceId] --output text",  returnStdout:true).trim()
                     sh 'aws ec2 wait instance-status-ok --instance-ids $id'
                 }
             }
@@ -68,8 +70,20 @@ pipeline {
                 }
             }
         }
+        stage('Create ECR') {
+            steps {
+                script {
+                    sh(script: "aws ecr describe-repositories --region ${AWS_REGION} --repository-names ${APP_REPO_NAME} \
+                                || aws ecr create-repository --repository-name ${APP_REPO_NAME} --image-tag-mutability IMMUTABLE", returnStatus: true)
+                    sh(script: "aws ecr describe-repositories --region ${AWS_REGION} --repository-names ${APP_REPO_NAME} \
+                                || aws ecr create-repository --repository-name ${APP_REPO_NAME} --image-tag-mutability IMMUTABLE", returnStatus: true)
+                    sh(script: "aws ecr describe-repositories --region ${AWS_REGION} --repository-names ${APP_REPO_NAME} \
+                                || aws ecr create-repository --repository-name ${APP_REPO_NAME} --image-tag-mutability IMMUTABLE", returnStatus: true)
+                }
+            }
+        }
     }
-    
+
     post {
         success {
             timeout(time: 5, unit: 'MINUTES') {
