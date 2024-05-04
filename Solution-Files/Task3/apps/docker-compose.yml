@@ -16,7 +16,7 @@ services:
       image: 621627302500.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:reactv1
       restart: always
       environment:
-        REACT_APP_API_URL: http://${NODE_IP}:8080/car-rental/api/
+        REACT_APP_API_URL: http://3.84.185.234:8080/car-rental/api/ # DEGISTIRILECEK !!!!!!
       depends_on:
         - postgresql
       ports:
@@ -37,3 +37,7 @@ services:
         - "8080:8080"
       networks:
         - blue-rental-car
+
+networks:
+    blue-rental-car:
+        driver: bridge

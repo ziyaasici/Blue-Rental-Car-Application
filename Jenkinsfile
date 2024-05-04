@@ -19,53 +19,53 @@ pipeline {
     }
 
     stages {
-        stage('Create KeyPair') {
-            steps {
-                script {
-                    sh(script: "aws ec2 describe-key-pairs --key-names ${params.Environment}-Keypair --region ${AWS_REGION} --query 'KeyPairs[0]' || \
-                                aws ec2 create-key-pair --key-name ${params.Environment}-Keypair --region ${AWS_REGION} --query 'KeyMaterial' \
-                                --output text > ${params.Environment}-Keypair.pem", returnStdout: true)
-                    sh(script: "sudo chmod 400 ${params.Environment}-Keypair.pem", returnStatus: true)
-                }
-            }
-        }
-        stage('Create Resources') {
-            steps {
-                script {
-                    dir("Solution-Files/Task1/Terraform") {
-                        sh(script: "terraform workspace select ${params.Environment} || terraform workspace new ${params.Environment}", returnStdout: true)
-                        sh(script: "terraform init", returnStdout: true)
-                        sh(script: "terraform apply -auto-approve \
-                                    -var tags='${TAGS}' \
-                                    -var key_name='${params.Environment}-Keypair' \
-                                    -var environment='${params.Environment}' \
-                                    -var instance_type='${params.InstanceType}' \
-                                    -var ami='${params.AMI}' \
-                                    -var ec2_count=${params.InstanceCount}", returnStdout: true)
-                    }
-                }
-            }
-        }
-        stage('Wait for Resources') {
-            steps {
-                script {
-                    echo 'Waiting for resources to get ready'
-                    id = sh(script: "aws ec2 describe-instances --filters Name=tag-value,Values='Blue-Rental-${params.Environment}' \
-                                    Name=instance-state-name,Values=running --query Reservations[*].Instances[*].[InstanceId] --output text",  returnStdout:true).trim()
-                    sh 'aws ec2 wait instance-status-ok --instance-ids $id'
-                }
-            }
-        }
-        stage('Ansible Configurations') {
-            steps {
-                dir("Solution-Files/Task2/Ansible/") {
-                    ansiblePlaybook(
-                        playbook: "${params.Environment}-playbook.yml", 
-                        extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem"
-                    )
-                }
-            }
-        }
+        // stage('Create KeyPair') {
+        //     steps {
+        //         script {
+        //             sh(script: "aws ec2 describe-key-pairs --key-names ${params.Environment}-Keypair --region ${AWS_REGION} --query 'KeyPairs[0]' || \
+        //                         aws ec2 create-key-pair --key-name ${params.Environment}-Keypair --region ${AWS_REGION} --query 'KeyMaterial' \
+        //                         --output text > ${params.Environment}-Keypair.pem", returnStdout: true)
+        //             sh(script: "sudo chmod 400 ${params.Environment}-Keypair.pem", returnStatus: true)
+        //         }
+        //     }
+        // }
+        // stage('Create Resources') {
+        //     steps {
+        //         script {
+        //             dir("Solution-Files/Task1/Terraform") {
+        //                 sh(script: "terraform workspace select ${params.Environment} || terraform workspace new ${params.Environment}", returnStdout: true)
+        //                 sh(script: "terraform init", returnStdout: true)
+        //                 sh(script: "terraform apply -auto-approve \
+        //                             -var tags='${TAGS}' \
+        //                             -var key_name='${params.Environment}-Keypair' \
+        //                             -var environment='${params.Environment}' \
+        //                             -var instance_type='${params.InstanceType}' \
+        //                             -var ami='${params.AMI}' \
+        //                             -var ec2_count=${params.InstanceCount}", returnStdout: true)
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('Wait for Resources') {
+        //     steps {
+        //         script {
+        //             echo 'Waiting for resources to get ready'
+        //             id = sh(script: "aws ec2 describe-instances --filters Name=tag-value,Values='Blue-Rental-${params.Environment}' \
+        //                             Name=instance-state-name,Values=running --query Reservations[*].Instances[*].[InstanceId] --output text",  returnStdout:true).trim()
+        //             sh 'aws ec2 wait instance-status-ok --instance-ids $id'
+        //         }
+        //     }
+        // }
+        // stage('Ansible Configurations') {
+        //     steps {
+        //         dir("Solution-Files/Task2/Ansible/") {
+        //             ansiblePlaybook(
+        //                 playbook: "${params.Environment}-playbook.yml", 
+        //                 extras: "--private-key=${WORKSPACE}/${params.Environment}-Keypair.pem"
+        //             )
+        //         }
+        //     }
+        // }
         stage('Create ECR') {
             steps {
                 script {
@@ -121,8 +121,8 @@ pipeline {
             timeout(time: 5, unit: 'MINUTES') {
                 dir("Solution-Files/Task1/Terraform") {
                     sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
-                    sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force", returnStdout: true)
-                    sh(script: "docker image prune -af", returnStdout: true)
+                    // sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force", returnStdout: true)
+                    // sh(script: "docker image prune -af", returnStdout: true)
                     sh(script: "terraform destroy -auto-approve", returnStdout: true)
                 }
             }
@@ -130,8 +130,8 @@ pipeline {
         failure {
             dir("Solution-Files/Task1/Terraform") {
                 sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
-                sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force", returnStdout: true)
-                sh(script: "docker image prune -af", returnStdout: true)
+                // sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force", returnStdout: true)
+                // sh(script: "docker image prune -af", returnStdout: true)
                 sh(script: "terraform destroy -auto-approve", returnStdout: true)
             }
         }
