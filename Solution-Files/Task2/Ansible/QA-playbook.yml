@@ -37,7 +37,6 @@
         - device-mapper-persistent-data
         - lvm2
         - unzip
-        - libcrypt-compat
       tags:
         - install_yum_utilities
 
