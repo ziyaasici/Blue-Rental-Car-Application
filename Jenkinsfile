@@ -13,6 +13,8 @@ pipeline {
         AWS_ACCESS=credentials('AWS-Jenkins')
         AWS_REGION = 'us-east-1'
         TAGS = "{\"Name\":\"Blue-Rental-${params.Environment}\"}"
+        AWS_ACCOUNT_ID=sh(script:'export PATH="$PATH:/usr/local/bin" && aws sts get-caller-identity --query Account --output text', returnStdout:true).trim()
+        ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
         APP_REPO_NAME = "ziyaasici/blue-rental-car"
     }
 
@@ -83,7 +85,7 @@ pipeline {
             timeout(time: 5, unit: 'MINUTES') {
                 dir("Solution-Files/Task1/Terraform") {
                     sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
-                    sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME}", returnStdout: true)
+                    // sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME}", returnStdout: true)
                     sh(script: "terraform destroy -auto-approve", returnStdout: true)
                 }
             }
@@ -91,7 +93,7 @@ pipeline {
         failure {
             dir("Solution-Files/Task1/Terraform") {
                 sh(script: "aws ec2 delete-key-pair --key-name ${params.Environment}-Keypair", returnStdout: true)
-                sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME}", returnStdout: true)
+                // sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME}", returnStdout: true)
                 sh(script: "terraform destroy -auto-approve", returnStdout: true)
             }
         }
