@@ -85,7 +85,7 @@ pipeline {
                         sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:postgresqlv1" .', returnStdout: true)
                     }
                 }
-                dir("Solution-Files/Task3/apps/react") {
+                dir("Solution-Files/Task3/apps/bluerentalcars-frontend") {
                     script {
                         sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:reactv1" .', returnStdout: true)
                     }
