@@ -80,12 +80,12 @@ pipeline {
         }
         stage('Build Images') {
             steps {
-                script {
-                    env.NODE_IP = sh(script: 'terraform output -raw ec2-public-ips', returnStdout:true).trim()
-                }   
-                sh 'echo ${NODE_IP}'
-                sh 'echo "REACT_APP_BASE_URL=http://${NODE_IP}:5000/" > ./react/client/.env'
-                sh 'cat ./Solution-Files/Task3/apps/bluerentalcars-frontend/.env'
+                // script {
+                //     env.NODE_IP = sh(script: 'terraform output -raw ec2-public-ips', returnStdout:true).trim()
+                // }   
+                // sh 'echo ${NODE_IP}'
+                // sh 'echo "REACT_APP_BASE_URL=http://${NODE_IP}:5000/" > ./react/client/.env'
+                // sh 'cat ./Solution-Files/Task3/apps/bluerentalcars-frontend/.env'
                 dir("Solution-Files/Task3/apps/postgresql") {
                     script {
                         sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:postgresqlv1" .', returnStdout: true)
