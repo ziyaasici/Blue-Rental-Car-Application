@@ -5,26 +5,16 @@
   become: yes
   remote_user: ec2-user
 
-  vars: 
-    aws_region: us-east-1
-    aws_account_id: ""
-    ecr_registry: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com"
   tasks:
-    - name: update all packages
-      ansible.builtin.yum:
+    - name: Update system packages
+      yum:
         name: '*'
-        state: latest 
+        state: latest
+      tags:
+        - update_system_packages
 
-    - name: Getting AWS account id
-      shell: aws sts get-caller-identity --query 'Account' --output text
-      register: account_id
-
-    - name: Assigning AWS account id to variable
-      set_fact:
-        aws_account_id: "{{ account_id.stdout }}"
-
-    - name: Remove docker if installed from CentOS repo
-      ansible.builtin.yum:
+    - name: Remove old Docker versions
+      yum:
         name:
           - docker
           - docker-client
@@ -34,46 +24,71 @@
           - docker-latest-logrotate
           - docker-logrotate
           - docker-engine
-        state: removed
+        state: absent
+      tags:
+        - remove_old_docker_versions
 
-    - name: Install yum utils
-      ansible.builtin.yum:
+    - name: Install yum utilities
+      yum:
         name: "{{ item }}"
-        state: latest
-      with_items:
+        state: present
+      loop:
         - yum-utils
         - device-mapper-persistent-data
         - lvm2
         - unzip
+      tags:
+        - install_yum_utilities
 
     - name: Install Docker
-      ansible.builtin.yum:
+      yum:
         name: docker
         state: latest
+      tags:
+        - install_docker
 
-
-    - name: Add user ec2-user to docker group
-      ansible.builtin.user:
+    - name: Add user to Docker group
+      user:
         name: ec2-user
         groups: docker
-        append: yes  
-        
-    - name: Start Docker service
-      ansible.builtin.service:
+      tags:
+        - add_user_to_docker_group
+
+    - name: Start and enable Docker service
+      service:
         name: docker
         state: started
-        enabled: yes 
+        enabled: yes
+      tags:
+        - start_docker_service
 
-    - name: Docker Compose'u Kur
+    - name: Download and install Docker Compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64"
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+      tags:
+        - install_docker_compose
+
+    - name: AWS CLI Test
       shell: |
-          curl -SL https://github.com/docker/compose/releases/download/v2.24.7/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
-          chmod +x /usr/local/bin/docker-compose
+        aws s3 ls
+      environment:
+        AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: aws_cli_result
+      tags:
+        - aws_cli_test
 
-    - name: log in to AWS ec2-user
-      ansible.builtin.shell: |
-        export PATH=/usr/local/bin:$PATH
-        source ~/.bash_profile
-        aws ecr get-login-password --region {{ aws_region }} | docker login --username AWS --password-stdin {{ ecr_registry }}   
+    - name: Log in to AWS ECR
+      shell: |
+        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 621627302500.dkr.ecr.us-east-1.amazonaws.com
+      environment:
+        AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: aws_cli_result
+      tags:
+        - login_to_aws_ecr
 
     - name: Copy docker-compose.yml to the server
       copy:
