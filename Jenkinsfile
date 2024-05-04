@@ -1,6 +1,7 @@
 pipeline {
 
-    agent { label 'Linux' } 
+    // agent { label 'Linux' } 
+    agent any
 
     parameters {
         choice(name: 'Environment', choices: ['DEV', 'PROD', 'QA', 'STAG'], description: 'Environment to create resources on')
