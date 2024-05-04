@@ -9,4 +9,5 @@ POSTGRES_USER: techprodb_user
 POSTGRES_PASSWORD: password
 POSTGRES_DB: carrental
 
-Notes: Üç servis için Dockerfile hazırlanacak, özellikle backend java ile yazıldığı için çift katmanlı Dockerfile olacak. Maven ile önce compile edilecek  daha sonra java app çalıştırılacak şekilde dizayn edilecek. 
+Notes: Üç servis için Dockerfile hazırlanacak, özellikle backend java ile yazıldığı için çift katmanlı Dockerfile olacak. Maven ile önce compile edilecek  
+daha sonra java app çalıştırılacak şekilde dizayn edilecek. 

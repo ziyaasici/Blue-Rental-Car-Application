@@ -16,5 +16,8 @@ WORKDIR /app
 # Copy only the artifacts we need from the first stage and discard the rest
 COPY --from=build /app/target/*.jar /app/app.jar
 
+# Expose the port the app runs on
+EXPOSE 8080
+
 # Define the command to run the application
 CMD ["java", "-jar", "app.jar"]
