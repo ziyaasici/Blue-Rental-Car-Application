@@ -82,7 +82,12 @@ pipeline {
             steps {
                 dir("Solution-Files/Task3/apps/postgresql") {
                     script {
-                        sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:postgresv1" .', returnStdout: true)
+                        sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:postgresqlv1" .', returnStdout: true)
+                    }
+                }
+                dir("Solution-Files/Task3/apps/react") {
+                    script {
+                        sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:reactv1" .', returnStdout: true)
                     }
                 }
             }
@@ -91,7 +96,8 @@ pipeline {
             steps {
                 script {
                     sh(script: 'aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin "$ECR_REGISTRY"', returnStdout: true)
-                    sh(script: 'docker push "$ECR_REGISTRY/$APP_REPO_NAME:postgresv1"', returnStdout: true)
+                    sh(script: 'docker push "$ECR_REGISTRY/$APP_REPO_NAME:postgresqlv1"', returnStdout: true)
+                    sh(script: 'docker push "$ECR_REGISTRY/$APP_REPO_NAME:reactv1"', returnStdout: true)
                 }
             }
         }
