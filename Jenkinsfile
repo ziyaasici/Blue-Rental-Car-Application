@@ -52,10 +52,6 @@ pipeline {
                 script {
                     sh(script: "aws ecr describe-repositories --region ${AWS_REGION} --repository-names ${APP_REPO_NAME} \
                                 || aws ecr create-repository --repository-name ${APP_REPO_NAME} --image-tag-mutability IMMUTABLE", returnStatus: true)
-                    // sh(script: "aws ecr describe-repositories --region ${AWS_REGION} --repository-names ${APP_REPO_NAME} \
-                    //             || aws ecr create-repository --repository-name ${APP_REPO_NAME} --image-tag-mutability IMMUTABLE", returnStatus: true)
-                    // sh(script: "aws ecr describe-repositories --region ${AWS_REGION} --repository-names ${APP_REPO_NAME} \
-                    //             || aws ecr create-repository --repository-name ${APP_REPO_NAME} --image-tag-mutability IMMUTABLE", returnStatus: true)
                 }
             }
         }

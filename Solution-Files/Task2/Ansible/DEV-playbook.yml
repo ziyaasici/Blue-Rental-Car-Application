@@ -104,7 +104,7 @@
 
     - name: Copy docker-compose.yml to the server
       copy:
-        src: /usr/jenkins/workspace/Blue-Rental-Car-Project/Solution-Files/Task3/apps/docker-compose.yml
+        src: /var/lib/jenkins/workspace/Blue-Rental-Car-Project/Solution-Files/Task3/apps/docker-compose.yml
         dest: /home/ec2-user/docker-compose.yml
         
     - name: Start Docker Compose
