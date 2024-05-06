@@ -7,7 +7,7 @@ pipeline {
         choice(name: 'Environment', choices: ['DEV', 'PROD', 'QA', 'STAG'], description: 'Environment to create resources on')
         choice(name: 'InstanceType', choices: ['t2.micro', 't3.medium'], description: 'Instance Type for EC2')
         choice(name: 'AMI', choices: ['ami-07caf09b362be10b8', 'ami-0a1179631ec8933d7'], description: 'AMI for EC2')
-        choice(name: 'InstanceCount', choices: ['1', '2', '3', '4', '5'], description: 'Number of EC2 instances to deploy')
+        // choice(name: 'InstanceCount', choices: ['1', '2', '3', '4', '5'], description: 'Number of EC2 instances to deploy')
     }
 
     environment {
@@ -31,6 +31,23 @@ pipeline {
                 }
             }
         }
+        // stage('Create Resources') {
+        //     steps {
+        //         script {
+        //             dir("Solution-Files/Task1/Terraform") {
+        //                 sh(script: "terraform workspace select ${params.Environment} || terraform workspace new ${params.Environment}", returnStdout: true)
+        //                 sh(script: "terraform init", returnStdout: true)
+        //                 sh(script: "terraform apply -auto-approve \
+        //                             -var tags='${TAGS}' \
+        //                             -var key_name='${params.Environment}-Keypair' \
+        //                             -var environment='${params.Environment}' \
+        //                             -var instance_type='${params.InstanceType}' \
+        //                             -var ami='${params.AMI}' \
+        //                             -var ec2_count=${params.InstanceCount}", returnStdout: true)
+        //             }
+        //         }
+        //     }
+        // }
         stage('Create Resources') {
             steps {
                 script {
@@ -42,8 +59,7 @@ pipeline {
                                     -var key_name='${params.Environment}-Keypair' \
                                     -var environment='${params.Environment}' \
                                     -var instance_type='${params.InstanceType}' \
-                                    -var ami='${params.AMI}' \
-                                    -var ec2_count=${params.InstanceCount}", returnStdout: true)
+                                    -var ami='${params.AMI}'", returnStdout: true)
                     }
                 }
             }
