@@ -83,7 +83,7 @@ pipeline {
         }
         stage('ENVSUBST Update Docker Compose') {
             steps {
-                dir('Solution-Files/Task3'){
+                dir('Solution-Files/Task3/apps'){
                     script {
                         sh(script: "envsubst < docker-compose-template.yml > docker-compose.yml", returnStatus: true)
                     }
