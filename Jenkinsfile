@@ -60,7 +60,7 @@ pipeline {
             steps {
                 dir('Solution-Files/Task1/Terraform'){
                     script {
-                        env.NODE_IP = sh(script: 'terraform output -raw ec2-public-ips', returnStdout:true).trim()
+                        env.NODE_IP = sh(script: 'terraform output -raw node_public_ip', returnStdout:true).trim()
                     }
                 }
             }
