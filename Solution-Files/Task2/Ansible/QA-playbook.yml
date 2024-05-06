@@ -106,12 +106,8 @@
       copy:
         src: /var/lib/jenkins/workspace/Blue-Rental-Car-Project/Solution-Files/Task3/apps/docker-compose.yml
         dest: /home/ec2-user/docker-compose.yml
-        tags:
-        - copy compose to ec2-user
         
     - name: Start Docker Compose
       command: docker-compose up -d --build
       args:
         chdir: /home/ec2-user/
-        tags:
-        - compose up
