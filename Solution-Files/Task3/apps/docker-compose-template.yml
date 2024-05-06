@@ -1,0 +1,51 @@
+version: "3.7"
+
+services:
+  postgresql:
+    image: "${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:postgresqlv1"
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: techprodb_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: carrental
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data/
+    networks:
+      - carrental-net
+
+  react:
+    image: "${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:reactv1"
+    container_name: react
+    depends_on:
+      - java
+      - postgresql
+    environment:
+      REACT_APP_API_URL: http://${NODE_IP}:8080/car-rental/api/
+    ports:
+      - "3000:3000"
+    networks:
+      - carrental-net
+
+  java:
+    image: "${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:javav1"
+    container_name: java
+    depends_on:
+      - postgresql
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/carrental
+      SPRING_DATASOURCE_USERNAME: techprodb_user
+      SPRING_DATASOURCE_PASSWORD: password
+    networks:
+      - carrental-net    
+
+volumes:
+    db-data:
+
+networks:
+    carrental-net:
+        driver: bridge

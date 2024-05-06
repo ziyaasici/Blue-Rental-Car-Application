@@ -17,6 +17,7 @@ pipeline {
         AWS_ACCOUNT_ID=sh(script:'export PATH="$PATH:/usr/local/bin" && aws sts get-caller-identity --query Account --output text', returnStdout:true).trim()
         ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
         APP_REPO_NAME = "ziyaasici/blue-rental-car"
+        APP_NAME= "car-rental"
     }
 
     stages {
@@ -55,14 +56,26 @@ pipeline {
                 }
             }
         }
+        stage('ENV React Update') {
+            steps {
+                dir('Solution-Files/Task1/Terraform'){
+                    script {
+                        env.NODE_IP = sh(script: 'terraform output -raw ec2-public-ips', returnStdout:true).trim()
+                    }
+                }
+            }
+        }
+        stage('ENVSUBST Update Docker Compose') {
+            steps {
+                dir('Solution-Files/Task3'){
+                    script {
+                        sh(script: "envsubst < docker-compose-template.yml > docker-compose.yml", returnStatus: true)
+                    }
+                }
+            }
+        }
         stage('Build Images') {
             steps {
-                // script {
-                //     env.NODE_IP = sh(script: 'terraform output -raw ec2-public-ips', returnStdout:true).trim()
-                // }   
-                // sh 'echo ${NODE_IP}'
-                // sh 'echo "REACT_APP_BASE_URL=http://${NODE_IP}:5000/" > ./react/client/.env'
-                // sh 'cat ./Solution-Files/Task3/apps/bluerentalcars-frontend/.env'
                 dir("Solution-Files/Task3/apps/postgresql") {
                     script {
                         sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:postgresqlv1" .', returnStdout: true)
