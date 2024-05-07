@@ -5,7 +5,7 @@ pipeline {
 
     parameters {
         choice(name: 'Environment', choices: ['DEV', 'PROD', 'QA', 'STAG'], description: 'Environment to create resources on')
-        choice(name: 'InstanceType', choices: ['t2.micro', 't3.medium'], description: 'Instance Type for EC2')
+        choice(name: 'InstanceType', choices: ['t3a.medium', 't2.micro'], description: 'Instance Type for EC2')
         choice(name: 'AMI', choices: ['ami-07caf09b362be10b8', 'ami-0a1179631ec8933d7'], description: 'AMI for EC2')
     }
 
