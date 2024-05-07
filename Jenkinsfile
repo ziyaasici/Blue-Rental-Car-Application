@@ -26,7 +26,7 @@ pipeline {
                     sh(script: "aws ec2 describe-key-pairs --key-names ${params.Environment}-Keypair --region ${AWS_REGION} --query 'KeyPairs[0]' || \
                                 aws ec2 create-key-pair --key-name ${params.Environment}-Keypair --region ${AWS_REGION} --query 'KeyMaterial' \
                                 --output text > ${params.Environment}-Keypair.pem", returnStdout: true)
-                    sh(script: "chmod 400 ${params.Environment}-Keypair.pem", returnStatus: true)
+                    sh(script: "chmod 444 ${params.Environment}-Keypair.pem", returnStatus: true)
                 }
             }
         }

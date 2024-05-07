@@ -16,7 +16,7 @@ pipeline {
                     sh(script: "aws ec2 describe-key-pairs --key-names Task4-Keypair --region ${AWS_REGION} --query 'KeyPairs[0]' || \
                                 aws ec2 create-key-pair --key-name Task4-Keypair --region ${AWS_REGION} --query 'KeyMaterial' \
                                 --output text > Task4-Keypair.pem", returnStdout: true)
-                    sh(script: "chmod 400 Task4-Keypair.pem", returnStatus: true)
+                    sh(script: "chmod 444 Task4-Keypair.pem", returnStatus: true)
                 }
             }
         }        
@@ -32,10 +32,30 @@ pipeline {
                 }
             }
         }
+        stage('Wait for Resources') {
+            steps {
+                script {
+                    echo 'Waiting for resources to get ready'
+                    id = sh(script: "aws ec2 describe-instances --filters Name=tag-value,Values='Blue-Rental-Task4' \
+                                    Name=instance-state-name,Values=running --query Reservations[*].Instances[*].[InstanceId] --output text",  returnStdout:true).trim()
+                    sh 'aws ec2 wait instance-status-ok --instance-ids $id'
+                }
+            }
+        }
+        stage('Deploy w/Ansible') {
+            steps {
+                dir("Solution-Files/Task4/Ansible/") {
+                    ansiblePlaybook(
+                        playbook: "playbook.yml", 
+                        extras: "--private-key=${WORKSPACE}/Task4-Keypair.pem"
+                    )
+                }
+            }
+        }
     }
     post {
         failure {
-            dir("Solution-Files/Task1/Terraform")  {
+            dir("Solution-Files/Task4/Terraform")  {
                 sh(script: "aws ec2 delete-key-pair --key-name Task4-Keypair", returnStdout: true)
                 sh(script: "terraform destroy -auto-approve", returnStdout: true)
             } 
