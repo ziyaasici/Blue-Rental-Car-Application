@@ -117,7 +117,6 @@
 
     - name: Copy docker-compose.yml to the server
       copy:
-        # src: /var/lib/jenkins/workspace/Blue-Rental-Car-Project/Solution-Files/Task3/apps/docker-compose.yml
         src: "{{ compose_dir }}/docker-compose.yml"
         dest: /home/ec2-user/docker-compose.yml
         

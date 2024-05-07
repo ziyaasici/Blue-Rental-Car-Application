@@ -74,26 +74,11 @@ pipeline {
         }
         stage('Build Images') {
             steps {
-                // dir("Solution-Files/Task3/apps/postgresql") {
-                //     script {
-                //         sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:postgresqlv1" .', returnStdout: true)
-                //     }
-                // }
-                // dir("Solution-Files/Task3/apps/bluerentalcars-frontend") {
-                //     script {
-                //         sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:reactv1" .', returnStdout: true)
-                //     }
-                // }
-                // dir("Solution-Files/Task3/apps/bluerentalcars-backend") {
-                //     script {
-                //         sh(script: 'docker build --force-rm -t "$ECR_REGISTRY/$APP_REPO_NAME:javav1" .', returnStdout: true)
-                //     }
-                // }
-                sh """
-                    docker build --force-rm -t "${ECR_REGISTRY}/${APP_REPO_NAME}:javav1" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-backend"
-                    docker build --force-rm -t "${ECR_REGISTRY}/${APP_REPO_NAME}:reactv1" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-frontend"
-                    docker build --force-rm -t "${ECR_REGISTRY}/${APP_REPO_NAME}:postgresqlv1" "${WORKSPACE}/Solution-Files/Task3/apps/postgresql"
-                """
+                script {
+                    sh(script: 'docker build --force-rm -t "${ECR_REGISTRY}/${APP_REPO_NAME}:javav1" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-backend"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "${ECR_REGISTRY}/${APP_REPO_NAME}:reactv1" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-frontend"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "${ECR_REGISTRY}/${APP_REPO_NAME}:postgresqlv1" "${WORKSPACE}/Solution-Files/Task3/apps/postgresql"', returnStdout: true)
+                }
             }
         }
         stage('Push Images') {
