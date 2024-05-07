@@ -23,7 +23,7 @@ pipeline {
         stage('Create Resources') {
             steps {
                 script {
-                    dir("Solution-Files/Task1/Terraform") {
+                    dir("Solution-Files/Task4/Terraform") {
                         sh(script: "terraform workspace select Task4 || terraform workspace new Task4", returnStdout: true)
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform apply -auto-approve \
@@ -31,6 +31,14 @@ pipeline {
                     }
                 }
             }
+        }
+    }
+    post {
+        failure {
+            dir("Solution-Files/Task1/Terraform")  {
+                sh(script: "aws ec2 delete-key-pair --key-name Task4-Keypair", returnStdout: true)
+                sh(script: "terraform destroy -auto-approve", returnStdout: true)
+            } 
         }
     }
 }

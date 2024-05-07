@@ -1,7 +1,3 @@
-variable "ami" {
-  default     = "ami-04b70fa74e45c3917"
-}
-
 variable "instance_type" {
   default = "t3a.medium"
 }

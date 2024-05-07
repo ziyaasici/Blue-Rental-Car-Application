@@ -26,7 +26,7 @@ resource "aws_security_group" "ec2-sec-grp" {
 
 resource "aws_instance" "ec2" {
   instance_type = var.instance_type
-  ami = var.ami
+  ami = "ami-04b70fa74e45c3917"
   key_name = "Task4-Keypair"
   iam_instance_profile = "blue-rental-project-blue"
   vpc_security_group_ids = [aws_security_group.ec2-sec-grp.id]
