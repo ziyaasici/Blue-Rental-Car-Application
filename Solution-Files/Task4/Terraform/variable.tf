@@ -7,7 +7,7 @@ variable "instance_type" {
 }
 
 variable "key_name" {
-  default = "DEFAULT"
+  default = "Task4-Keypair"
 }
 
 variable "ports" {
@@ -20,10 +20,6 @@ variable "cidr" {
 
 variable "region" {
   default = "us-east-1"
-}
-
-variable "environment" {
-  default = "Task4"
 }
 
 variable "tags" {

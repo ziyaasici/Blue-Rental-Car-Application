@@ -1,8 +1,8 @@
 resource "aws_security_group" "ec2-sec-grp" {
-  name        = "${var.environment}-Sec-Grp"
-  description = "${var.environment} Security Group"
+  name        = "Task4-Sec-Grp"
+  description = "Task4 Security Group"
   tags = {
-    Name = "${var.environment}-Sec-Grp"
+    Name = "Task4-Sec-Grp"
   }
 
   dynamic "ingress" {
@@ -27,11 +27,11 @@ resource "aws_security_group" "ec2-sec-grp" {
 resource "aws_instance" "ec2" {
   instance_type = var.instance_type
   ami = var.ami
-  key_name = var.key_name
+  key_name = "Task4-Keypair"
   iam_instance_profile = "blue-rental-project-blue"
   vpc_security_group_ids = [aws_security_group.ec2-sec-grp.id]
   tags = {
     Project = "Blue-Rental-Car-Application-Project"
-    Name = "Blue-Rental-${var.environment}"
+    Name = "Blue-Rental-Task4"
   }
 }

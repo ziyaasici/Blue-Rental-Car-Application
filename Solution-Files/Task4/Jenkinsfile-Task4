@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_REGION = 'us-east-1'
+        TAGS = "{\"Name\":\"Blue-Rental-Task4\"}"
+        AWS_ACCOUNT_ID=sh(script:'export PATH="$PATH:/usr/local/bin" && aws sts get-caller-identity --query Account --output text', returnStdout:true).trim()
+        ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        APP_REPO_NAME = "ziyaasici/blue-rental-car"
+    }
+
+    stages {
+        stage('Create KeyPair') {
+            steps {
+                script {
+                    sh(script: "aws ec2 describe-key-pairs --key-names Task4-Keypair --region ${AWS_REGION} --query 'KeyPairs[0]' || \
+                                aws ec2 create-key-pair --key-name Task4-Keypair --region ${AWS_REGION} --query 'KeyMaterial' \
+                                --output text > Task4-Keypair.pem", returnStdout: true)
+                    sh(script: "chmod 400 Task4-Keypair.pem", returnStatus: true)
+                }
+            }
+        }        
+        stage('Create Resources') {
+            steps {
+                script {
+                    dir("Solution-Files/Task1/Terraform") {
+                        sh(script: "terraform workspace select Task4 || terraform workspace new Task4", returnStdout: true)
+                        sh(script: "terraform init", returnStdout: true)
+                        sh(script: "terraform apply -auto-approve \
+                                    -var tags='${TAGS}'", returnStdout: true)
+                    }
+                }
+            }
+        }
+    }
+}
