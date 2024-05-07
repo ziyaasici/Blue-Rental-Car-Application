@@ -1,6 +1,6 @@
 ---
 - name: Update System Packages
-  hosts: _Blue_Rental_DEV
+  hosts: _Blue_Rental_Task4
   gather_facts: no
   become: yes
   remote_user: ubuntu
@@ -13,6 +13,12 @@
   tasks:
     - name: Ansible Connection Test
       shell: echo AnsibleConnection works.
+
+    - name: K3s Install
+      shell: curl -sfL https://get.k3s.io | sh - 
+
+    - name: Check Nodes
+      shell: sudo k3s kubectl get node 
     # - name: Getting AWS Account ID
     #   shell: aws sts get-caller-identity --query 'Account' --output text
     #   register: account_id
