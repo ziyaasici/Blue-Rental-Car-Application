@@ -5,7 +5,20 @@
   become: yes
   remote_user: ec2-user
 
+  vars:
+    aws_region: us-east-1
+    aws_account_id: ""
+    ecr_registry: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com"
+
   tasks:
+    - name: Getting AWS Account ID
+      shell: aws sts get-caller-identity --query 'Account' --output text
+      register: account_id
+    
+    - name: Assing AWS Account ID to Variable
+      set_fact:
+        aws_account_id: "{{ account_id.stdout }}"
+
     - name: Update system packages
       yum:
         name: '*'
@@ -104,7 +117,7 @@
 
     - name: Copy docker-compose.yml to the server
       copy:
-        src: /var/lib/jenkins/workspace/Blue-Rental-Car-Project/Solution-Files/Task3/apps/docker-compose.yml
+        src: "{{ compose_dir }}/docker-compose.yml"
         dest: /home/ec2-user/docker-compose.yml
         
     - name: Start Docker Compose
