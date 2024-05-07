@@ -30,7 +30,7 @@ variable "ec2_count" {
 }
 
 variable "ports" {
-  default = [22, 80, 8080, 5000, 3000]
+  default = [22, 80, 443, 8080, 3000]
 }
 
 variable "cidr" {
