@@ -10,7 +10,7 @@ pipeline {
     }
 
     environment {
-        AWS_ACCESS=credentials('AWS-Jenkins')
+        // AWS_ACCESS=credentials('AWS-Jenkins')
         AWS_REGION = 'us-east-1'
         TAGS = "{\"Name\":\"Blue-Rental-${params.Environment}\"}"
         AWS_ACCOUNT_ID=sh(script:'export PATH="$PATH:/usr/local/bin" && aws sts get-caller-identity --query Account --output text', returnStdout:true).trim()
