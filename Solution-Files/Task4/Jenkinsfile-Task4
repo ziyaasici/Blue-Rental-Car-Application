@@ -54,6 +54,19 @@ pipeline {
         }
     }
     post {
+        success {
+                timeout(time:10, unit:'MINUTES'){
+                input message:'Approve terminate'
+                }
+           sh """
+                aws ec2 delete-key-pair --region ${AWS_REGION} --key-name Task4-Keypair
+                rm -rf Task4
+                """            
+            sh """
+                cd Solution-Files/Task4/terraform
+                terraform destroy --auto-approve
+                """
+        }
         failure {
             dir("Solution-Files/Task4/Terraform")  {
                 sh(script: "aws ec2 delete-key-pair --key-name Task4-Keypair", returnStdout: true)
