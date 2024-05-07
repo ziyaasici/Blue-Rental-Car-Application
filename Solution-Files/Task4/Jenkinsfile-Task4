@@ -16,7 +16,7 @@ pipeline {
                     sh(script: "aws ec2 describe-key-pairs --key-names Task4-Keypair --region ${AWS_REGION} --query 'KeyPairs[0]' || \
                                 aws ec2 create-key-pair --key-name Task4-Keypair --region ${AWS_REGION} --query 'KeyMaterial' \
                                 --output text > Task4-Keypair.pem", returnStdout: true)
-                    sh(script: "chmod 444 Task4-Keypair.pem", returnStatus: true)
+                    sh(script: "chmod 400 Task4-Keypair.pem", returnStatus: true)
                 }
             }
         }        
