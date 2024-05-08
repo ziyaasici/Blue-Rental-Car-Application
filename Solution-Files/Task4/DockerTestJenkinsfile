@@ -5,7 +5,7 @@ pipeline {
     //     DOCKER_HUB_USERNAME = credentials('ziyaasici')
     //     DOCKER_HUB_PASSWORD = credentials('Antiseptiq24.')
     //     DOCKER_HUB_EMAIL = 'ziya.asici@yahoo.com' // Replace with your Docker Hub email
-    //     DOCKER_REGISTRY = 'ziyaasici'
+        DOCKER_REGISTRY = 'ziyaasici'
     //     // IMAGE_NAME = 'your_image_name' // Replace with your image name
     //     // DOCKER_REPO_NAME = 'your_repo_name' // Replace with your repository name
     // }
@@ -21,27 +21,17 @@ pipeline {
             }
         }
 
-        stage('Create Docker Hub Repository') {
+        stage('Push Image to Docker Hub') {
             steps {
                 script {
-                    sh "curl -X POST -u ziyaasici:Antiseptiq24. https://hub.docker.com/v2/repositories/ziyaasici/frontend/"
-                    sh "curl -X POST -u ziyaasici:Antiseptiq24. https://hub.docker.com/v2/repositories/ziyaasici/backend/"
-                    sh "curl -X POST -u ziyaasici:Antiseptiq24. https://hub.docker.com/v2/repositories/ziyaasici/db/"
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_HUB_USERNAME, DOCKER_HUB_PASSWORD) {
+                        docker.image("${DOCKER_REGISTRY}/frontend").push()
+                        docker.image("${DOCKER_REGISTRY}/backend").push()
+                        docker.image("${DOCKER_REGISTRY}/db").push()
+                    }
                 }
             }
         }
-
-        // stage('Push Image to Docker Hub') {
-        //     steps {
-        //         script {
-        //             docker.withRegistry('https://index.docker.io/v1/', DOCKER_HUB_USERNAME, DOCKER_HUB_PASSWORD) {
-        //                 docker.image("${DOCKER_REGISTRY}/frontend").push()
-        //                 docker.image("${DOCKER_REGISTRY}/backend").push()
-        //                 docker.image("${DOCKER_REGISTRY}/db").push()
-        //             }
-        //         }
-        //     }
-        // }
     }
 
     post {
