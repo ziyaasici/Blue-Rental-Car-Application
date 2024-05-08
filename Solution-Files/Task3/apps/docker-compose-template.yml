@@ -9,7 +9,7 @@ services:
       - app
       - db
     environment:
-      REACT_APP_API_URL: http://${NODE_IP}:8080/car-rental/api/
+      REACT_APP_API_URL: http://${NODE_IP}:${NODE_PORT}/car-rental/api/
     ports:
       - "3000:3000"
     networks:
