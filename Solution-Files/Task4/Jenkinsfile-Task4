@@ -97,14 +97,6 @@ pipeline {
                 }
             }
         }
-        stage('Check Installations') {
-            steps {
-                sh  """
-                        sudo kubectl get nodes
-                        kompose version
-                    """
-            }
-        }
     }
     post {
         success {
@@ -114,6 +106,7 @@ pipeline {
             sh  """
                     aws ec2 delete-key-pair --region ${AWS_REGION} --key-name Task4-Keypair
                     rm -rf Task4-Keypair
+                    rm -rf /var/lib/jenkins/workspace
                     aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force
                     docker image prune -af
                     cd Solution-Files/Task4/terraform
