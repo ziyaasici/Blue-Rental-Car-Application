@@ -1,22 +1,22 @@
 pipeline {
     agent any
     
-    environment {
-        DOCKER_HUB_USERNAME = credentials('ziyaasici')
-        DOCKER_HUB_PASSWORD = credentials('Antiseptiq24.')
-        DOCKER_HUB_EMAIL = 'ziya.asici@yahoo.com' // Replace with your Docker Hub email
-        DOCKER_REGISTRY = 'ziyaasici'
-        // IMAGE_NAME = 'your_image_name' // Replace with your image name
-        // DOCKER_REPO_NAME = 'your_repo_name' // Replace with your repository name
-    }
+    // environment {
+    //     DOCKER_HUB_USERNAME = credentials('ziyaasici')
+    //     DOCKER_HUB_PASSWORD = credentials('Antiseptiq24.')
+    //     DOCKER_HUB_EMAIL = 'ziya.asici@yahoo.com' // Replace with your Docker Hub email
+    //     DOCKER_REGISTRY = 'ziyaasici'
+    //     // IMAGE_NAME = 'your_image_name' // Replace with your image name
+    //     // DOCKER_REPO_NAME = 'your_repo_name' // Replace with your repository name
+    // }
 
     stages {
         stage('Build Image') {
             steps {
                 script {
-                    sh(script: 'docker build --force-rm -t "${DOCKER_REGISTRY}/backend" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-backend"', returnStdout: true)
-                    sh(script: 'docker build --force-rm -t "${DOCKER_REGISTRY}/frontend" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-frontend"', returnStdout: true)
-                    sh(script: 'docker build --force-rm -t "${DOCKER_REGISTRY}/db" "${WORKSPACE}/Solution-Files/Task3/apps/postgresql"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "ziyaasici/backend" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-backend"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "ziyaasici/frontend" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-frontend"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "ziyaasici/db" "${WORKSPACE}/Solution-Files/Task3/apps/postgresql"', returnStdout: true)
                 }
             }
         }
