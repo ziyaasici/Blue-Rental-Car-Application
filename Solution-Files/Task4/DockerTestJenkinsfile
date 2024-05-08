@@ -21,15 +21,15 @@ pipeline {
             }
         }
 
-        // stage('Create Docker Hub Repository') {
-        //     steps {
-        //         script {
-        //             sh "curl -X POST -u ${DOCKER_HUB_USERNAME}:${DOCKER_HUB_PASSWORD} https://hub.docker.com/v2/repositories/${DOCKER_HUB_USERNAME}/frontend/"
-        //             sh "curl -X POST -u ${DOCKER_HUB_USERNAME}:${DOCKER_HUB_PASSWORD} https://hub.docker.com/v2/repositories/${DOCKER_HUB_USERNAME}/backend/"
-        //             sh "curl -X POST -u ${DOCKER_HUB_USERNAME}:${DOCKER_HUB_PASSWORD} https://hub.docker.com/v2/repositories/${DOCKER_HUB_USERNAME}/db/"
-        //         }
-        //     }
-        // }
+        stage('Create Docker Hub Repository') {
+            steps {
+                script {
+                    sh "curl -X POST -u ziyaasici:Antiseptiq24. https://hub.docker.com/v2/repositories/${DOCKER_HUB_USERNAME}/frontend/"
+                    sh "curl -X POST -u ziyaasici:Antiseptiq24. https://hub.docker.com/v2/repositories/${DOCKER_HUB_USERNAME}/backend/"
+                    sh "curl -X POST -u ziyaasici:Antiseptiq24. https://hub.docker.com/v2/repositories/${DOCKER_HUB_USERNAME}/db/"
+                }
+            }
+        }
 
         // stage('Push Image to Docker Hub') {
         //     steps {
