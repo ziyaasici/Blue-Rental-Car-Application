@@ -103,19 +103,21 @@ pipeline {
                 timeout(time:20, unit:'MINUTES'){
                 input message:'Approve terminate'
                 }
-           sh """
-                aws ec2 delete-key-pair --region ${AWS_REGION} --key-name Task4-Keypair
-                rm -rf Task4
-                """            
-            sh """
-                cd Solution-Files/Task4/terraform
-                terraform destroy --auto-approve
+            sh  """
+                    aws ec2 delete-key-pair --region ${AWS_REGION} --key-name Task4-Keypair
+                    rm -rf Task4-Keypair
+                    aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force
+                    docker image prune -af
+                    cd Solution-Files/Task4/terraform
+                    terraform destroy --auto-approve
                 """
         }
         failure {
             dir("Solution-Files/Task4/Terraform")  {
                 sh(script: "aws ec2 delete-key-pair --key-name Task4-Keypair", returnStdout: true)
                 sh(script: "terraform destroy -auto-approve", returnStdout: true)
+                sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force", returnStdout: true)
+                sh(script: "docker image prune -af", returnStdout: true)
             } 
         }
     }
