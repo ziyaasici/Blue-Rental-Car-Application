@@ -24,9 +24,9 @@ pipeline {
         stage('Create Docker Hub Repository') {
             steps {
                 script {
-                    sh "curl -X POST -u ziyaasici:Antiseptiq24. https://hub.docker.com/v2/repositories/${DOCKER_HUB_USERNAME}/frontend/"
-                    sh "curl -X POST -u ziyaasici:Antiseptiq24. https://hub.docker.com/v2/repositories/${DOCKER_HUB_USERNAME}/backend/"
-                    sh "curl -X POST -u ziyaasici:Antiseptiq24. https://hub.docker.com/v2/repositories/${DOCKER_HUB_USERNAME}/db/"
+                    sh "curl -X POST -u ziyaasici:Antiseptiq24. https://hub.docker.com/v2/repositories/ziyaasici/frontend/"
+                    sh "curl -X POST -u ziyaasici:Antiseptiq24. https://hub.docker.com/v2/repositories/ziyaasici/backend/"
+                    sh "curl -X POST -u ziyaasici:Antiseptiq24. https://hub.docker.com/v2/repositories/ziyaasici/db/"
                 }
             }
         }
