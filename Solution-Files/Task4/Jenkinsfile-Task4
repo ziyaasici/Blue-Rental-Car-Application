@@ -42,7 +42,7 @@ pipeline {
         }
         stage('ENV React Update') {
             steps {
-                dir('Solution-Files/Task1/Terraform'){
+                dir('Solution-Files/Task4/Terraform'){
                     script {
                         env.NODE_IP = sh(script: 'terraform output -raw node_public_ip', returnStdout:true).trim()
                         env.NODE_PORT = sh(script: 'echo 32000', returnStdout:true).trim()
