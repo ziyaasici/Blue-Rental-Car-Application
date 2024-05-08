@@ -32,6 +32,51 @@ pipeline {
                 }
             }
         }
+        stage('Create ECR') {
+            steps {
+                script {
+                    sh(script: "aws ecr describe-repositories --region ${AWS_REGION} --repository-names ${APP_REPO_NAME} \
+                                || aws ecr create-repository --repository-name ${APP_REPO_NAME} --image-tag-mutability IMMUTABLE", returnStatus: true)
+                }
+            }
+        }
+        // stage('ENV React Update') {
+        //     steps {
+        //         dir('Solution-Files/Task1/Terraform'){
+        //             script {
+        //                 env.NODE_IP = sh(script: 'terraform output -raw node_public_ip', returnStdout:true).trim()
+        //             }
+        //         }
+        //     }
+        // }
+        stage('ENVSUBST Update Docker Compose') {
+            steps {
+                dir('Solution-Files/Task3/apps'){
+                    script {
+                        sh(script: "envsubst < docker-compose-template.yml > docker-compose.yml", returnStatus: true)
+                    }
+                }
+            }
+        }
+        stage('Build Images') {
+            steps {
+                script {
+                    sh(script: 'docker build --force-rm -t "${ECR_REGISTRY}/${APP_REPO_NAME}:javav1" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-backend"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "${ECR_REGISTRY}/${APP_REPO_NAME}:reactv1" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-frontend"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "${ECR_REGISTRY}/${APP_REPO_NAME}:postgresqlv1" "${WORKSPACE}/Solution-Files/Task3/apps/postgresql"', returnStdout: true)
+                }
+            }
+        }
+        stage('Push Images') {
+            steps {
+                script {
+                    sh(script: 'aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin "$ECR_REGISTRY"', returnStdout: true)
+                    sh(script: 'docker push "$ECR_REGISTRY/$APP_REPO_NAME:postgresqlv1"', returnStdout: true)
+                    sh(script: 'docker push "$ECR_REGISTRY/$APP_REPO_NAME:reactv1"', returnStdout: true)
+                    sh(script: 'docker push "$ECR_REGISTRY/$APP_REPO_NAME:javav1"', returnStdout: true)
+                }
+            }
+        }
         stage('Wait for Resources') {
             steps {
                 script {
