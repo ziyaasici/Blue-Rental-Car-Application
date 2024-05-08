@@ -14,9 +14,9 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    sh(script: 'docker build --force-rm -t "${DOCKER_REGISTRY}:backend" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-backend"', returnStdout: true)
-                    sh(script: 'docker build --force-rm -t "${DOCKER_REGISTRY}:frontend" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-frontend"', returnStdout: true)
-                    sh(script: 'docker build --force-rm -t "${DOCKER_REGISTRY}:db" "${WORKSPACE}/Solution-Files/Task3/apps/postgresql"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "${DOCKER_REGISTRY}/backend" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-backend"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "${DOCKER_REGISTRY}/frontend" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-frontend"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "${DOCKER_REGISTRY}/db" "${WORKSPACE}/Solution-Files/Task3/apps/postgresql"', returnStdout: true)
                 }
             }
         }
