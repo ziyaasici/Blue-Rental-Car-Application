@@ -1,14 +1,14 @@
 pipeline {
     agent any
     
-    // environment {
+    environment {
     //     DOCKER_HUB_USERNAME = credentials('ziyaasici')
     //     DOCKER_HUB_PASSWORD = credentials('Antiseptiq24.')
     //     DOCKER_HUB_EMAIL = 'ziya.asici@yahoo.com' // Replace with your Docker Hub email
         DOCKER_REGISTRY = 'ziyaasici'
     //     // IMAGE_NAME = 'your_image_name' // Replace with your image name
     //     // DOCKER_REPO_NAME = 'your_repo_name' // Replace with your repository name
-    // }
+    }
 
     stages {
         stage('Build Image') {
