@@ -110,7 +110,7 @@ pipeline {
                     rm -rf /var/lib/jenkins/workspace
                     aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force
                     docker image prune -af
-                    cd Solution-Files/Task4/terraform
+                    cd Solution-Files/Task4/Terraform
                     terraform destroy --auto-approve
                 """
         }
