@@ -5,34 +5,51 @@
   become: yes
   remote_user: ubuntu
 
-  # vars:
-  #   aws_region: us-east-1
-  #   aws_account_id: ""
-  #   ecr_registry: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com"
+  vars:
+    aws_region: us-east-1
+    aws_account_id: ""
+    ecr_registry: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com"
 
   tasks:
+
+    - name: Getting AWS Account ID
+      shell: aws sts get-caller-identity --query 'Account' --output text
+      register: account_id
+    
+    - name: Assing AWS Account ID to Variable
+      set_fact:
+        aws_account_id: "{{ account_id.stdout }}"
+
     - name: K3s Install
       shell: curl -sfL https://get.k3s.io | sh - 
 
-    - name: Download Kompose
+    - name: Kompose Install
       get_url:
         url: "https://github.com/kubernetes/kompose/releases/download/v1.33.0/kompose-linux-amd64"
         dest: "/usr/local/bin/kompose"
         mode: '0755'
       notify:
         - Reload Kompose
+        
+    - name: Log in to AWS ECR
+      shell: |
+        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 621627302500.dkr.ecr.us-east-1.amazonaws.com
+      environment:
+        AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: aws_cli_result
+      tags:
+        - login_to_aws_ecr
+
+    - name: Copy docker-compose.yml to the server
+      copy:
+        src: "{{ compose_dir }}/docker-compose.yml"
+        dest: /home/ec2-user/docker-compose.yml
 
   handlers:
     - name: Reload Kompose
       shell: /bin/true
 
-    # - name: Getting AWS Account ID
-    #   shell: aws sts get-caller-identity --query 'Account' --output text
-    #   register: account_id
-    
-    # - name: Assing AWS Account ID to Variable
-    #   set_fact:
-    #     aws_account_id: "{{ account_id.stdout }}"
 
     # - name: Update system packages
     #   yum:
