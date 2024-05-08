@@ -12,43 +12,106 @@
 
   tasks:
 
-    - name: Getting AWS Account ID
-      shell: aws sts get-caller-identity --query 'Account' --output text
-      register: account_id
-    
-    - name: Assing AWS Account ID to Variable
-      set_fact:
-        aws_account_id: "{{ account_id.stdout }}"
+    - name: Install K3S
+      shell: curl -sfL https://get.k3s.io | sh -
+      
+    - name: Set permissions for k3s.yaml
+      file:
+        path: /etc/rancher/k3s/k3s.yaml
+        mode: 'u+r'
 
-    - name: K3s Install
-      shell: curl -sfL https://get.k3s.io | sh - 
+    - name: Set KUBECONFIG environment variable
+      shell: export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
-    - name: Kompose Install
-      get_url:
-        url: "https://github.com/kubernetes/kompose/releases/download/v1.33.0/kompose-linux-amd64"
-        dest: "/usr/local/bin/kompose"
-        mode: '0755'
-      notify:
-        - Reload Kompose
+    - name: Download kompose
+      shell: curl -L https://github.com/kubernetes/kompose/releases/download/v1.33.0/kompose-linux-amd64 -o kompose
+
+    - name: Install kompose using snap
+      snap:
+        name: kompose
+        state: present
+
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg
+        - lsb-release
+
+    - name: Add Docker's official GPG key
+      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+    - name: Add Docker repository to APT sources
+      shell: >
+        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
         
-    - name: Log in to AWS ECR
-      shell: |
-        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 621627302500.dkr.ecr.us-east-1.amazonaws.com
-      environment:
-        AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-      register: aws_cli_result
-      tags:
-        - login_to_aws_ecr
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
 
-    - name: Copy docker-compose.yml to the server
-      copy:
-        src: "{{ compose_dir }}/docker-compose.yml"
-        dest: /home/ec2-user/docker-compose.yml
+    - name: Install Docker CE
+      apt:
+        name: 
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
 
-  handlers:
-    - name: Reload Kompose
-      shell: /bin/true
+    - name: Download docker-compose
+      shell: >
+        curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+    - name: Set permissions for docker-compose
+      file:
+        path: /usr/local/bin/docker-compose
+        mode: 'u+x'
+
+
+  #   - name: Getting AWS Account ID
+  #     shell: aws sts get-caller-identity --query 'Account' --output text
+  #     register: account_id
+    
+  #   - name: Assing AWS Account ID to Variable
+  #     set_fact:
+  #       aws_account_id: "{{ account_id.stdout }}"
+
+  #   - name: K3s Install
+  #     shell: curl -sfL https://get.k3s.io | sh - 
+
+  #   - name: Kompose Install
+  #     get_url:
+  #       url: "https://github.com/kubernetes/kompose/releases/download/v1.33.0/kompose-linux-amd64"
+  #       dest: "/usr/local/bin/kompose"
+  #       mode: '0755'
+  #     notify:
+  #       - Reload Kompose
+        
+  #   - name: Log in to AWS ECR
+  #     shell: |
+  #       aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 621627302500.dkr.ecr.us-east-1.amazonaws.com
+  #     environment:
+  #       AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+  #       AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+  #     register: aws_cli_result
+  #     tags:
+  #       - login_to_aws_ecr
+
+  #   - name: Copy docker-compose.yml to the server
+  #     copy:
+  #       src: "{{ compose_dir }}/docker-compose.yml"
+  #       dest: /home/ec2-user/docker-compose.yml
+
+  # handlers:
+  #   - name: Reload Kompose
+  #     shell: /bin/true
 
 
     # - name: Update system packages
