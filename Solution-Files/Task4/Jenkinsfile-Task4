@@ -97,6 +97,14 @@ pipeline {
                 }
             }
         }
+        stage('Check Installations') {
+            steps {
+                sh  """
+                        sudo kubectl get nodes
+                        kompose version
+                    """
+            }
+        }
     }
     post {
         success {

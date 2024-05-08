@@ -11,14 +11,21 @@
   #   ecr_registry: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com"
 
   tasks:
-    - name: Ansible Connection Test
-      shell: echo AnsibleConnection works.
-
     - name: K3s Install
       shell: curl -sfL https://get.k3s.io | sh - 
 
-    - name: Check Nodes
-      shell: sudo k3s kubectl get node 
+    - name: Download Kompose
+      get_url:
+        url: "https://github.com/kubernetes/kompose/releases/download/v1.33.0/kompose-linux-amd64"
+        dest: "/usr/local/bin/kompose"
+        mode: '0755'
+      notify:
+        - Reload Kompose
+
+  handlers:
+    - name: Reload Kompose
+      shell: /bin/true
+
     # - name: Getting AWS Account ID
     #   shell: aws sts get-caller-identity --query 'Account' --output text
     #   register: account_id
