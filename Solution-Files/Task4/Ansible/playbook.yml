@@ -21,6 +21,11 @@
     #     name: python3-pip
     #     state: present
 
+    - name: Install unzip
+      apt:
+        name: unzip
+        state: present
+
     - name: Download AWS CLI installation script
       get_url:
         url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
