@@ -16,15 +16,24 @@
       apt:
         update_cache: yes
 
-    - name: Install Python pip
-      apt:
-        name: python3-pip
-        state: present
+    # - name: Install Python pip
+    #   apt:
+    #     name: python3-pip
+    #     state: present
 
-    - name: Install AWS CLI using apt
-      apt:
-        name: awscli
-        state: latest
+    - name: Download AWS CLI installation script
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/awscliv2.zip
+
+    - name: Unzip AWS CLI installation script
+      unarchive:
+        src: /tmp/awscliv2.zip
+        dest: /tmp
+        remote_src: yes
+
+    - name: Run AWS CLI install script
+      command: /tmp/aws/install
 
     # - name: Getting AWS Account ID
     #   shell: aws sts get-caller-identity --query 'Account' --output text
