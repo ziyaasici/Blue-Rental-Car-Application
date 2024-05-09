@@ -40,6 +40,36 @@
     - name: Run AWS CLI install script
       command: /tmp/aws/install
 
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg
+        - lsb-release
+
+    - name: Add Docker's official GPG key
+      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+    - name: Add Docker repository to APT sources
+      shell: >
+        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+
+    - name: Install Docker CE
+      apt:
+        name: 
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: present
+        
     # - name: Getting AWS Account ID
     #   shell: aws sts get-caller-identity --query 'Account' --output text
     #   register: account_id
@@ -86,36 +116,6 @@
     - name: Update apt package cache
       apt:
         update_cache: yes
-
-    - name: Install required packages
-      apt:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - gnupg
-        - lsb-release
-
-    - name: Add Docker's official GPG key
-      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-
-    - name: Add Docker repository to APT sources
-      shell: >
-        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-        
-    - name: Update apt package cache
-      apt:
-        update_cache: yes
-
-    - name: Install Docker CE
-      apt:
-        name: 
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-        state: present
 
     - name: Download docker-compose
       shell: >
