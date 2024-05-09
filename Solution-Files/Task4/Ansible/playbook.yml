@@ -105,7 +105,7 @@
     - name: Execute Convert Script 
       become: yes
       become_user: ubuntu
-      script: /home/ubuntu/kompose-convert.sh
+      command: /home/ubuntu/kompose-convert.sh
 
   #   - name: Getting AWS Account ID
   #     shell: aws sts get-caller-identity --query 'Account' --output text
