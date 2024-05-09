@@ -11,7 +11,7 @@ for file in *.yaml; do
         # Correctly place the type: NodePort under spec, not under ports
         sed -i "/spec:/a \ \ type: NodePort" "$file"
         # Correctly insert the nodePort value with proper indentation
-        sed -i "/targetPort: \"3000\"/a \ \ \ \ nodePort: $ui_nodeport" "$file"
+        sed -i "/port: 3000/a \ \ \ \ \ \ nodePort: $ui_nodeport" "$file"
         ((ui_nodeport++))  # Increment after modifications are done
     fi
     
@@ -20,7 +20,7 @@ for file in *.yaml; do
         # Correctly place the type: NodePort under spec, not under ports
         sed -i "/spec:/a \ \ type: NodePort" "$file"
         # Correctly insert the nodePort value with proper indentation
-        sed -i "/targetPort: \"8080\"/a \ \ \ \ nodePort: $app_nodeport" "$file"
+        sed -i "/port: 8080/a \ \ \ \ \ \ nodePort: $app_nodeport" "$file"
         ((app_nodeport++))  # Increment after modifications are done
     fi
 done
