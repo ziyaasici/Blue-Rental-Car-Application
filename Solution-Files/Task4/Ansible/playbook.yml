@@ -133,18 +133,18 @@
       become_user: ubuntu
       command: /home/ubuntu/kompose convert -f /home/ubuntu/docker-compose.yml
 
-    - name: Copy script to instance
-      copy:
-        src: "{{ convert_dir }}/kompose-convert.sh"
-        dest: /home/ubuntu/kompose-convert.sh
-        owner: ubuntu
-        group: ubuntu
-        mode: '0755'
+    # - name: Copy script to instance
+    #   copy:
+    #     src: "{{ convert_dir }}/kompose-convert.sh"
+    #     dest: /home/ubuntu/kompose-convert.sh
+    #     owner: ubuntu
+    #     group: ubuntu
+    #     mode: '0755'
 
-    - name: Execute Convert Script 
-      become: yes
-      become_user: ubuntu
-      command: /home/ubuntu/kompose-convert.sh
+    # - name: Execute Convert Script 
+    #   become: yes
+    #   become_user: ubuntu
+    #   command: /home/ubuntu/kompose-convert.sh
 
     - name: Delete docker-compose.yml
       become: yes
