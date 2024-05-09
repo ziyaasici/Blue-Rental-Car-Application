@@ -88,7 +88,7 @@
     - name: Convert docker-compose file
       command: kompose convert -f docker-compose.yml -o /home/ubuntu/manifests/
       args:
-        chdir: /home/ubuntu/docker-compose.yml
+        chdir: /home/ubuntu/
 
     - name: Copy script to instance
       copy:
