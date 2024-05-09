@@ -81,7 +81,7 @@
         owner: ubuntu  # Set the owner to ubuntu
         group: ubuntu  # Set the group to ubuntu
         mode: '0664' 
-        
+
     - name: Ensure kompose is executable
       file:
         path: /home/ubuntu/kompose
@@ -90,9 +90,9 @@
         mode: '0755'
 
     - name: Convert docker-compose file
-      command: kompose convert -f docker-compose.yml
-      args:
-        chdir: /home/ubuntu
+      become: yes
+      become_user: ubuntu
+      command: /home/ubuntu/kompose convert -f /home/ubuntu/docker-compose.yml
 
     - name: Copy script to instance
       copy:
