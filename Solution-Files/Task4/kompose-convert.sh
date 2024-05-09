@@ -8,19 +8,19 @@ app_nodeport=32000
 for file in *.yaml; do
     # Set NodePort for UI service
     if grep -q "io.kompose.service: ui" "$file"; then
-        # Add the NodePort type correctly
-        sed -i "/ports:/a \ \ type: NodePort" "$file"
-        # Add the nodePort value under the correct port with the correct indentation
-        sed -i "/- name: \"3000\"/a \ \ \ \ nodePort: $ui_nodeport" "$file"
+        # Correctly place the type: NodePort under spec, not under ports
+        sed -i "/spec:/a \ \ type: NodePort" "$file"
+        # Correctly insert the nodePort value with proper indentation
+        sed -i "/targetPort: \"3000\"/a \ \ \ \ nodePort: $ui_nodeport" "$file"
         ((ui_nodeport++))  # Increment after modifications are done
     fi
     
     # Set NodePort for app service
     if grep -q "io.kompose.service: app" "$file"; then
-        # Add the NodePort type correctly
-        sed -i "/ports:/a \ \ type: NodePort" "$file"
-        # Add the nodePort value under the correct port with the correct indentation
-        sed -i "/- name: \"8080\"/a \ \ \ \ nodePort: $app_nodeport" "$file"
+        # Correctly place the type: NodePort under spec, not under ports
+        sed -i "/spec:/a \ \ type: NodePort" "$file"
+        # Correctly insert the nodePort value with proper indentation
+        sed -i "/targetPort: \"8080\"/a \ \ \ \ nodePort: $app_nodeport" "$file"
         ((app_nodeport++))  # Increment after modifications are done
     fi
 done
