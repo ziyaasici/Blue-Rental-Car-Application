@@ -16,11 +16,6 @@
       apt:
         update_cache: yes
 
-    # - name: Install Python pip
-    #   apt:
-    #     name: python3-pip
-    #     state: present
-
     - name: Install unzip
       apt:
         name: unzip
@@ -69,14 +64,6 @@
           - docker-ce-cli
           - containerd.io
         state: present
-
-    # - name: Getting AWS Account ID
-    #   shell: aws sts get-caller-identity --query 'Account' --output text
-    #   register: account_id
-    
-    # - name: Assing AWS Account ID to Variable
-    #   set_fact:
-    #     aws_account_id: "{{ account_id.stdout }}"
 
     - name: Log in to AWS ECR
       shell: |
@@ -130,8 +117,8 @@
       copy:
         src: "{{ compose_dir }}/docker-compose.yml"
         dest: /home/ubuntu/docker-compose.yml
-        owner: ubuntu  # Set the owner to ubuntu
-        group: ubuntu  # Set the group to ubuntu
+        owner: ubuntu 
+        group: ubuntu 
         mode: '0664' 
 
     - name: Ensure kompose is executable
