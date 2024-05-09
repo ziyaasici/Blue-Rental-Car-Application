@@ -159,26 +159,20 @@
         state: present
         update_cache: yes  # Ensure the package database is updated before installing
 
-    - name: Ensure Docker config directory exists
-      become: yes
-      become_user: ubuntu
-      file:
-        path: /etc/docker
-        state: directory
-        mode: '0755'
+    - name: Pull Frontend Image
+      docker_image:
+        name: "621627302500.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:reactv1"
+        state: present
 
-    - name: Configure Docker to use Amazon ECR Credential Helper
-      copy:
-        dest: /etc/docker/config.json
-        content: |
-          {
-              "credHelpers": {
-                  "621627302500.dkr.ecr.us-east-1.amazonaws.com": "ecr-login"
-              }
-          }
-        owner: ubuntu
-        group: ubuntu
-        mode: '0644'
+    - name: Pull Backend Image
+      docker_image:
+        name: "621627302500.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:javav1"
+        state: present
+
+    - name: Pull DB Image
+      docker_image:
+        name: "621627302500.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:postgresqlv1"
+        state: present
 
     - name: Deploy Application  
       become: yes
