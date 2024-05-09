@@ -69,7 +69,7 @@
           - docker-ce-cli
           - containerd.io
         state: present
-        
+
     # - name: Getting AWS Account ID
     #   shell: aws sts get-caller-identity --query 'Account' --output text
     #   register: account_id
@@ -158,6 +158,13 @@
       become: yes
       become_user: ubuntu
       command: /home/ubuntu/kompose-convert.sh
+
+    - name: Delete docker-compose.yml
+      become: yes
+      become_user: ubuntu
+      file:
+        path: /home/ubuntu/docker-compose.yml
+        state: absent
 
     - name: Deploy Application  
       become: yes
