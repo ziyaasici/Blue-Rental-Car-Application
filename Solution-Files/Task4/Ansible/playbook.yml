@@ -12,6 +12,10 @@
 
   tasks:
 
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+
     - name: Install Python pip
       apt:
         name: python3-pip
