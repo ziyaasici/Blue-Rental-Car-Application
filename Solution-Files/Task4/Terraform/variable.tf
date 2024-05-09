@@ -7,7 +7,7 @@ variable "key_name" {
 }
 
 variable "ports" {
-  default = [22, 80, 443, 8080, 3000]
+  default = [22, 80, 443, 8080, 3000, 31001, 32001, 31000, 32000]
 }
 
 variable "cidr" {

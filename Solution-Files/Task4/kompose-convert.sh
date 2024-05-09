@@ -11,7 +11,7 @@ for file in *.yaml; do
         # Add the NodePort type correctly
         sed -i "/ports:/i \ \ type: NodePort" "$file"
         # Add the nodePort value under the correct port
-        sed -i "/- name: \"3000\"/a \ \ \ \ nodePort: $ui_nodeport" "$file"
+        sed -i "/- name: \"3000\"/a \ \ \ \ \ nodePort: $ui_nodeport" "$file"
         ((ui_nodeport++))  # Increment after modifications are done
     fi
     
@@ -20,7 +20,7 @@ for file in *.yaml; do
         # Add the NodePort type correctly
         sed -i "/ports:/i \ \ type: NodePort" "$file"
         # Add the nodePort value under the correct port
-        sed -i "/- name: \"8080\"/a \ \ \ \ nodePort: $app_nodeport" "$file"
+        sed -i "/- name: \"8080\"/a \ \ \ \ \ nodePort: $app_nodeport" "$file"
         ((app_nodeport++))  # Increment after modifications are done
     fi
 done
