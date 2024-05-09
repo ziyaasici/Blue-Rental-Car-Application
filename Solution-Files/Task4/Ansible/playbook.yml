@@ -18,10 +18,16 @@
     - name: Set permissions for k3s.yaml
       file:
         path: /etc/rancher/k3s/k3s.yaml
-        mode: 'u+r'
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
 
-    - name: Set KUBECONFIG environment variable
-      shell: export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+    - name: Set KUBECONFIG environment variable permanently
+      lineinfile:
+        path: /home/ubuntu/.bashrc
+        line: 'export KUBECONFIG=/etc/rancher/k3s/k3s.yaml'
+        create: yes
+      become_user: ubuntu
 
     - name: Download kompose
       shell: curl -L https://github.com/kubernetes/kompose/releases/download/v1.33.0/kompose-linux-amd64 -o kompose
