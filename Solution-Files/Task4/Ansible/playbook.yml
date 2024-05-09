@@ -98,7 +98,9 @@
       copy:
         src: "{{ convert_dir }}/kompose-convert.sh"
         dest: /home/ubuntu/kompose-convert.sh
-        mode: "0755"
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
 
     - name: Execute script on managed EC2 instance
       script: /home/ubuntu/kompose-convert.sh
