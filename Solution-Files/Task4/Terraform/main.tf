@@ -1,8 +1,8 @@
 resource "aws_security_group" "ec2-sec-grp" {
-  name        = "Task4444-Sec-Grp"
-  description = "Task4444 Security Group"
+  name        = "Task44-Sec-Grp"
+  description = "Task44 Security Group"
   tags = {
-    Name = "Task4444-Sec-Grp"
+    Name = "Task44-Sec-Grp"
   }
 
   dynamic "ingress" {
