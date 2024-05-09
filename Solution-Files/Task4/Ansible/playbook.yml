@@ -107,6 +107,11 @@
       become_user: ubuntu
       command: /home/ubuntu/kompose-convert.sh
 
+    - name: Deploy Application  
+      become: yes
+      become_user: ubuntu
+      command: kubectl apply -f .
+
   #   - name: Getting AWS Account ID
   #     shell: aws sts get-caller-identity --query 'Account' --output text
   #     register: account_id
