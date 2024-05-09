@@ -79,25 +79,19 @@
         src: "{{ compose_dir }}/docker-compose.yml"
         dest: /home/ubuntu/docker-compose.yml
 
-    - name: Create folder
-      file:
-        path: /home/ubuntu/manifests
-        state: directory
-        mode: "0755"
-
     - name: Convert docker-compose file
-      command: kompose convert -f docker-compose.yml -o /home/ubuntu/manifests/
+      command: kompose convert -f docker-compose.yml
       args:
-        chdir: /home/ubuntu/
+        chdir: /home/ubuntu
 
     - name: Copy script to instance
       copy:
         src: "{{ convert_dir }}/kompose-convert.sh"
-        dest: /home/ubuntu/manifests/kompose-convert.sh
+        dest: /home/ubuntu/kompose-convert.sh
         mode: "0755"
 
     - name: Execute script on managed EC2 instance
-      script: /home/ubuntu/manifests/kompose-convert.sh
+      script: /home/ubuntu/kompose-convert.sh
 
   #   - name: Getting AWS Account ID
   #     shell: aws sts get-caller-identity --query 'Account' --output text
