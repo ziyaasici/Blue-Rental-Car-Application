@@ -11,6 +11,17 @@
     ecr_registry: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com"
 
   tasks:
+
+    - name: Install Python pip
+      apt:
+        name: python3-pip
+        state: present
+
+    - name: Install AWS CLI using pip
+      pip:
+        name: awscli
+        state: latest
+        
     - name: Getting AWS Account ID
       shell: aws sts get-caller-identity --query 'Account' --output text
       register: account_id
