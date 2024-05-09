@@ -11,7 +11,6 @@
     ecr_registry: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com"
 
   tasks:
-
     - name: Getting AWS Account ID
       shell: aws sts get-caller-identity --query 'Account' --output text
       register: account_id
