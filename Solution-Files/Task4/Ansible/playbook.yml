@@ -158,7 +158,7 @@
         name: amazon-ecr-credential-helper
         state: present
         update_cache: yes  # Ensure the package database is updated before installing
-        
+
     - name: Ensure the ubuntu user is added to the docker group
       user:
         name: ubuntu
@@ -167,17 +167,14 @@
 
     - name: Pull blue-rental-car:reactv1
       become: yes
-      become_user: ubuntu
       shell: docker pull 621627302500.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:reactv1
 
     - name: Pull blue-rental-car:javav1
       become: yes
-      become_user: ubuntu
       shell: docker pull 621627302500.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:javav1
 
     - name: Pull blue-rental-car:postgresqlv1
       become: yes
-      become_user: ubuntu
       shell: docker pull 621627302500.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:postgresqlv1
 
     - name: Deploy Application  
