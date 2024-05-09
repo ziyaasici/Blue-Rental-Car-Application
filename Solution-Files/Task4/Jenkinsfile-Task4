@@ -93,7 +93,8 @@ pipeline {
                 dir("Solution-Files/Task4/Ansible/") {
                     ansiblePlaybook(
                         playbook: "playbook.yml", 
-                        extras: "--private-key=${WORKSPACE}/Task4-Keypair.pem -e compose_dir=${WORKSPACE}/Solution-Files/Task3/apps/ -e convert_dir=${WORKSPACE}/Solution-Files/Task4/"
+                        extras: "--private-key=${WORKSPACE}/Task4-Keypair.pem -e compose_dir=${WORKSPACE}/Solution-Files/Task3/apps/ \
+                                -e convert_dir=${WORKSPACE}/Solution-Files/Task4/ -vvv"
                     )
                 }
             }
