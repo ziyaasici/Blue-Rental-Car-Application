@@ -12,6 +12,24 @@
 
   tasks:
 
+    - name: Getting AWS Account ID
+      shell: aws sts get-caller-identity --query 'Account' --output text
+      register: account_id
+    
+    - name: Assing AWS Account ID to Variable
+      set_fact:
+        aws_account_id: "{{ account_id.stdout }}"
+
+    - name: Log in to AWS ECR
+      shell: |
+        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 621627302500.dkr.ecr.us-east-1.amazonaws.com
+      environment:
+        AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      register: aws_cli_result
+      tags:
+        - login_to_aws_ecr
+
     - name: Install K3S
       shell: curl -sfL https://get.k3s.io | sh -
       
@@ -117,31 +135,3 @@
       become: yes
       become_user: ubuntu
       command: kubectl apply -f .
-
-  #   - name: Getting AWS Account ID
-  #     shell: aws sts get-caller-identity --query 'Account' --output text
-  #     register: account_id
-    
-  #   - name: Assing AWS Account ID to Variable
-  #     set_fact:
-  #       aws_account_id: "{{ account_id.stdout }}"
-
-  #   - name: Log in to AWS ECR
-  #     shell: |
-  #       aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 621627302500.dkr.ecr.us-east-1.amazonaws.com
-  #     environment:
-  #       AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-  #       AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-  #     register: aws_cli_result
-  #     tags:
-  #       - login_to_aws_ecr
-
-  # - name: AWS CLI Test
-  #   shell: |
-  #     aws s3 ls
-  #   environment:
-  #     AWS_ACCESS_KEY_ID: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-  #     AWS_SECRET_ACCESS_KEY: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-  #   register: aws_cli_result
-  #   tags:
-  #     - aws_cli_test

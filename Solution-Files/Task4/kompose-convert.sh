@@ -5,7 +5,7 @@ ui_nodeport=31000
 app_nodeport=32000
 
 # Loop through each generated Kubernetes manifest file
-for file in *.yaml; do
+for file in *service.yaml; do
     # Set NodePort for UI service
     if grep -q "io.kompose.service: ui" "$file"; then
         # Correctly place the type: NodePort under spec, not under ports
