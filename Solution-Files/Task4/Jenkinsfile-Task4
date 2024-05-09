@@ -99,7 +99,7 @@ pipeline {
             }
         }
     }
-    post {
+    // post {
         // success {
         //         timeout(time:20, unit:'MINUTES'){
         //         input message:'Approve terminate'
@@ -122,5 +122,5 @@ pipeline {
         //         sh(script: "docker image prune -af", returnStdout: true)
         //     } 
         // }
-    }
+    // }
 }
