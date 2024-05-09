@@ -1,5 +1,5 @@
 ---
-- name: Update System Packages
+- name: Deploying w/ Ansible
   hosts: _Blue_Rental_Task4
   gather_facts: no
   become: yes
@@ -7,8 +7,8 @@
 
   vars:
     aws_region: us-east-1
-    aws_account_id: ""
-    ecr_registry: "{{ aws_account_id }}.dkr.ecr.{{ aws_region }}.amazonaws.com"
+    aws_account_id: "621627302500"
+    ecr_registry: "621627302500.dkr.ecr.us-east-1.amazonaws.com"
 
   tasks:
 
@@ -21,14 +21,14 @@
       pip:
         name: awscli
         state: latest
-        
-    - name: Getting AWS Account ID
-      shell: aws sts get-caller-identity --query 'Account' --output text
-      register: account_id
+
+    # - name: Getting AWS Account ID
+    #   shell: aws sts get-caller-identity --query 'Account' --output text
+    #   register: account_id
     
-    - name: Assing AWS Account ID to Variable
-      set_fact:
-        aws_account_id: "{{ account_id.stdout }}"
+    # - name: Assing AWS Account ID to Variable
+    #   set_fact:
+    #     aws_account_id: "{{ account_id.stdout }}"
 
     - name: Log in to AWS ECR
       shell: |
