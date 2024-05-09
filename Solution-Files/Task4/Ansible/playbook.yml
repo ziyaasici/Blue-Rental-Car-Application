@@ -21,8 +21,8 @@
         name: python3-pip
         state: present
 
-    - name: Install AWS CLI using pip
-      pip:
+    - name: Install AWS CLI using apt
+      apt:
         name: awscli
         state: latest
 
