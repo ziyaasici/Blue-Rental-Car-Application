@@ -102,7 +102,9 @@
         group: ubuntu
         mode: '0755'
 
-    - name: Execute script on managed EC2 instance
+    - name: Execute Convert Script 
+      become: yes
+      become_user: ubuntu
       script: /home/ubuntu/kompose-convert.sh
 
   #   - name: Getting AWS Account ID
