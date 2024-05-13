@@ -1,5 +1,5 @@
 - name: k3s install.
-  hosts: _test_team_server
+  hosts: _Blue_Rental_Task4
   become: true
   remote_user: ubuntu
   vars: 

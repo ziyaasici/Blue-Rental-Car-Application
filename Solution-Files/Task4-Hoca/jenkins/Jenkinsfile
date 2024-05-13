@@ -1,0 +1,147 @@
+pipeline {
+    agent any
+
+    environment {
+        // AWS_ACCESS=credentials('AWS-Jenkins')
+        AWS_REGION = 'us-east-1'
+        TAGS = "{\"Name\":\"Blue-Rental-Task4\"}"
+        AWS_ACCOUNT_ID=sh(script:'export PATH="$PATH:/usr/local/bin" && aws sts get-caller-identity --query Account --output text', returnStdout:true).trim()
+        ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        APP_REPO_NAME = "blue-rental-car"
+        APP_NAME = "car-rental"
+    }
+
+    stages {
+        stage('Create KeyPair') {
+            steps {
+                script {
+                    sh(script: "aws ec2 describe-key-pairs --key-names Task4-Keypair --region ${AWS_REGION} --query 'KeyPairs[0]' || \
+                                aws ec2 create-key-pair --key-name Task4-Keypair --region ${AWS_REGION} --query 'KeyMaterial' \
+                                --output text > Task4-Keypair.pem", returnStdout: true)
+                    sh(script: "chmod 400 Task4-Keypair.pem", returnStatus: true)
+                }
+            }
+        }        
+        stage('Create Resources') {
+            steps {
+                script {
+                    dir("Solution-Files/Task4/Terraform") {
+                        sh(script: "terraform workspace select Task4 || terraform workspace new Task4", returnStdout: true)
+                        sh(script: "terraform init", returnStdout: true)
+                        sh(script: "terraform apply -auto-approve \
+                                    -var tags='${TAGS}'", returnStdout: true)
+                    }
+                }
+            }
+        }
+        stage('Prepare Tags for Images') {
+            steps {
+                script {
+                    env.IMAGE_TAG_FE = "${ECR_REGISTRY}/${APP_REPO_NAME}:frontend-v${BUILD_NUMBER}"
+                    env.IMAGE_TAG_FE = "${ECR_REGISTRY}/${APP_REPO_NAME}:backend-v${BUILD_NUMBER}"
+                    env.IMAGE_TAG_FE = "${ECR_REGISTRY}/${APP_REPO_NAME}:postgre-v${BUILD_NUMBER}"
+                }
+            }
+        }
+        stage('Build Images') {
+            steps {
+                script {
+                    sh(script: 'docker build --force-rm -t "${IMAGE_TAG_FE}" "${WORKSPACE}/Task3/apps/bluerenatlcars-frontend"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "${IMAGE_TAG_BE}" "${WORKSPACE}/Task3/apps/bluerenatlcars-backend"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "${IMAGE_TAG_DB}" "${WORKSPACE}/Task3/apps/postgresql"', returnStdout: true)
+                }
+            }
+        }
+        stage('Create ECR') {
+            steps {
+                script {
+                    sh(script: "aws ecr describe-repositories --region ${AWS_REGION} --repository-names ${APP_REPO_NAME} \
+                                || aws ecr create-repository --repository-name ${APP_REPO_NAME} --repository-names ${APP_REPO_NAME}", returnStatus: true)
+                }
+            }
+        }
+        stage('Push Images') {
+            steps {
+                script {
+                    sh(script: 'aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin "$ECR_REGISTRY"', returnStdout: true)
+                    sh(script: 'docker push "${IMAGE_TAG_FE}"', returnStdout: true)
+                    sh(script: 'docker push "${IMAGE_TAG_BE}', returnStdout: true)
+                    sh(script: 'docker push "${IMAGE_TAG_DB}"', returnStdout: true)
+                }
+            }
+        }
+        stage('Wait for Resources') {
+            steps {
+                script {
+                    echo 'Waiting for resources to get ready'
+                    id = sh(script: "aws ec2 describe-instances --filters Name=tag-value,Values='Blue-Rental-Task4' \
+                                    Name=instance-state-name,Values=running --query Reservations[*].Instances[*].[InstanceId] --output text",  returnStdout:true).trim()
+                    sh 'aws ec2 wait instance-status-ok --instance-ids $id'
+                }
+            }
+        }
+        stage('ENV React Update') {
+            steps {
+                dir('Solution-Files/Task4/Terraform'){
+                    script {
+                        env.NODE_IP = sh(script: 'terraform output -raw node_public_ip', returnStdout:true).trim()
+                    }
+                }
+            }
+        }
+        // stage('ENVSUBST Update Docker Compose') {
+        //     steps {
+        //         dir('Solution-Files/Task3/apps'){
+        //             script {
+        //                 sh(script: "envsubst < docker-compose-template.yml > docker-compose.yml", returnStatus: true)
+        //             }
+        //         }
+        //     }
+        // }
+        stage('Deploy w/Ansible') {
+            steps {
+                dir("Solution-Files/Task4/Ansible/") {
+                    ansiblePlaybook(
+                        playbook: "playbook.yml", 
+                        extras: "--private-key=${WORKSPACE}/Task4-Keypair.pem -e JENKINS_IP=${NODE_IP}"
+                    )
+                }
+            }
+        }
+        stage('Deploy Application') {
+            steps {
+                sh """
+                    cd Task4-Hoca/k8s
+                    sed -i 's/127.0.0.1/${NODE_IP}/g' /var/lib/jenkins/kubeconfig.yaml
+                    export KUBECONFIG=/var/lib/jenkins/kubeconfig.yaml
+                    envsubst < kustomization-template.yaml > kustomization.yaml
+                    kubectl apply -k .
+                """
+            }
+        }
+    }
+    post {
+        success {
+                timeout(time:20, unit:'MINUTES'){
+                input message:'Approve terminate'
+                }
+            sh  """
+                    aws ec2 delete-key-pair --region ${AWS_REGION} --key-name Task4-Keypair
+                    rm -rf Task4-Keypair
+                    rm -rf /var/lib/jenkins/workspace
+                    aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force
+                    docker image prune -af
+                    cd Solution-Files/Task4-Hoca/terraform
+                    terraform destroy --auto-approve
+                """
+        }
+        failure {
+            dir("Solution-Files/Task4-Hoca/terraform")  {
+                sh(script: "aws ec2 delete-key-pair --key-name Task4-Keypair", returnStdout: true)
+                sh(script: "terraform destroy -auto-approve", returnStdout: true)
+                sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force", returnStdout: true)
+                sh(script: "docker image prune -af", returnStdout: true)
+            } 
+        }
+    }
+}
