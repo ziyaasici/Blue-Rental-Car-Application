@@ -38,8 +38,8 @@ pipeline {
             steps {
                 script {
                     env.IMAGE_TAG_FE = "${ECR_REGISTRY}/${APP_REPO_NAME}:frontend-v${BUILD_NUMBER}"
-                    env.IMAGE_TAG_FE = "${ECR_REGISTRY}/${APP_REPO_NAME}:backend-v${BUILD_NUMBER}"
-                    env.IMAGE_TAG_FE = "${ECR_REGISTRY}/${APP_REPO_NAME}:postgre-v${BUILD_NUMBER}"
+                    env.IMAGE_TAG_BE = "${ECR_REGISTRY}/${APP_REPO_NAME}:backend-v${BUILD_NUMBER}"
+                    env.IMAGE_TAG_DB = "${ECR_REGISTRY}/${APP_REPO_NAME}:postgre-v${BUILD_NUMBER}"
                 }
             }
         }
