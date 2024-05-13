@@ -56,7 +56,7 @@ pipeline {
             steps {
                 script {
                     sh(script: "aws ecr describe-repositories --region ${AWS_REGION} --repository-names ${APP_REPO_NAME} \
-                                || aws ecr create-repository --repository-name ${APP_REPO_NAME} --repository-names ${APP_REPO_NAME}", returnStatus: true)
+                                || aws ecr create-repository --repository-name ${APP_REPO_NAME} --region ${AWS_REGION}", returnStatus: true)
                 }
             }
         }
