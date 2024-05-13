@@ -65,7 +65,7 @@ pipeline {
                 script {
                     sh(script: 'aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin "$ECR_REGISTRY"', returnStdout: true)
                     sh(script: 'docker push "${IMAGE_TAG_FE}"', returnStdout: true)
-                    sh(script: 'docker push "${IMAGE_TAG_BE}', returnStdout: true)
+                    sh(script: 'docker push "${IMAGE_TAG_BE}"', returnStdout: true)
                     sh(script: 'docker push "${IMAGE_TAG_DB}"', returnStdout: true)
                 }
             }
