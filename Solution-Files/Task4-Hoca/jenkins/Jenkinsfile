@@ -136,7 +136,7 @@ pipeline {
                 """
         }
         failure {
-            dir("terraform")  {
+            dir("Solution-Files/Task4-Hoca/Terraform")  {
                 sh(script: "aws ec2 delete-key-pair --key-name Task4-Keypair || true", returnStdout: true)
                 sh(script: "terraform destroy -auto-approve", returnStdout: true)
                 sh(script: "aws ecr delete-repository --repository-name ${APP_REPO_NAME} --force", returnStdout: true)
