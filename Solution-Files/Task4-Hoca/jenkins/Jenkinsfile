@@ -25,7 +25,7 @@ pipeline {
         stage('Create Resources') {
             steps {
                 script {
-                    dir("Solution-Files/Task4/Terraform") {
+                    dir("Solution-Files/Task4-Hoca/Terraform") {
                         sh(script: "terraform workspace select Task4 || terraform workspace new Task4", returnStdout: true)
                         sh(script: "terraform init", returnStdout: true)
                         sh(script: "terraform apply -auto-approve \
