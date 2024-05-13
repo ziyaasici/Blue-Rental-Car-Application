@@ -98,14 +98,22 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Deploy w/Ansible') {
+        // stage('Deploy w/Ansible') {
+        //     steps {
+        //         dir("Solution-Files/Task4/Ansible/") {
+        //             ansiblePlaybook(
+        //                 playbook: "playbook.yml", 
+        //                 extras: "--private-key=${WORKSPACE}/Task4-Keypair.pem -e JENKINS_IP=${NODE_IP}"
+        //             )
+        //         }
+        //     }
+        // }
+        stage('Ansible Configurations') {
             steps {
-                dir("Solution-Files/Task4/Ansible/") {
-                    ansiblePlaybook(
-                        playbook: "playbook.yml", 
-                        extras: "--private-key=${WORKSPACE}/Task4-Keypair.pem -e JENKINS_IP=${NODE_IP}"
-                    )
-                }
+                sh """
+                    cd Task4-Hoca/ansible
+                    andsible-playbook -i inventory_aws_ec2.yml --private-key="${WORKSPACE}/Task4-Keypair.pem" -e "JENKINS_IP"=${NODE_IP} playbook.yml
+                """
             }
         }
         stage('Deploy Application') {
