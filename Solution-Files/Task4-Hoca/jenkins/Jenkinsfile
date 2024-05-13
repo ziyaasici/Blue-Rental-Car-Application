@@ -112,7 +112,7 @@ pipeline {
             steps {
                 sh """
                     cd Solution-Files/Task4-Hoca/ansible
-                    ansible-playbook -i inventory_aws_ec2.yml --private-key="${WORKSPACE}/Task4-Keypair.pem" -e "JENKINS_IP"=${NODE_IP} playbook.yml
+                    ansible-playbook -i inventory_aws_ec2.yml --private-key="${WORKSPACE}/Task4-Keypair.pem" -e "JENKINS_IP=${NODE_IP}" playbook.yml
                 """
             }
         }
