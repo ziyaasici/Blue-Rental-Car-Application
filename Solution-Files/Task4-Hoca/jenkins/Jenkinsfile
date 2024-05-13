@@ -46,9 +46,9 @@ pipeline {
         stage('Build Images') {
             steps {
                 script {
-                    sh(script: 'docker build --force-rm -t "${IMAGE_TAG_FE}" "${WORKSPACE}/Task3/apps/bluerenatlcars-frontend"', returnStdout: true)
-                    sh(script: 'docker build --force-rm -t "${IMAGE_TAG_BE}" "${WORKSPACE}/Task3/apps/bluerenatlcars-backend"', returnStdout: true)
-                    sh(script: 'docker build --force-rm -t "${IMAGE_TAG_DB}" "${WORKSPACE}/Task3/apps/postgresql"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "${IMAGE_TAG_FE}" "Solution-Files/Task3/apps/bluerenatlcars-frontend"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "${IMAGE_TAG_BE}" "Solution-Files/Task3/apps/bluerenatlcars-backend"', returnStdout: true)
+                    sh(script: 'docker build --force-rm -t "${IMAGE_TAG_DB}" "Solution-Files/Task3/apps/postgresql"', returnStdout: true)
                 }
             }
         }
