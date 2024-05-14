@@ -10,6 +10,6 @@
             "sg-0bbb2e78941494935"
         ],
         "endpointPublicAccess": true,
-        "endpointPrivateAccess": false
+        "endpointPrivateAccess": true
     }
 }
