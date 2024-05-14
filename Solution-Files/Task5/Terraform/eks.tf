@@ -29,6 +29,6 @@ resource "aws_eks_node_group" "eks_node_group" {
   ami_type = "AL2_x86_64"
 
   depends_on = [
-    aws_eks_cluster.my_cluster
+    aws_eks_cluster.EKS
   ]
 }
