@@ -1,0 +1,15 @@
+{
+    "name": "Blue-Car-Rental-EKS",
+    "version": "1.29",
+    "roleArn": "arn:aws:iam::621627302500:role/EKS-Cluster-IAM", 
+    "resourcesVpcConfig": {
+        "subnetIds": [
+            "subnet-0618e802945d1eae8", "subnet-055c964dca4c73f84"
+        ],
+        "securityGroupIds": [
+            "sg-0bbb2e78941494935"
+        ],
+        "endpointPublicAccess": true,
+        "endpointPrivateAccess": false
+    }
+}

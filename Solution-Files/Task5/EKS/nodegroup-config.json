@@ -1,0 +1,20 @@
+{
+    "clusterName": "Blue-Car-Rental-EKS",
+    "nodegroupName": "Blue-Car-Rental-NodeGroup",
+    "subnets": [
+        "subnet-0618e802945d1eae8", "subnet-055c964dca4c73f84"
+    ],
+    "diskSize": 20,  
+    "instanceTypes": ["t3a.medium"],  
+    "scalingConfig": {
+        "minSize": 1,
+        "maxSize": 2,
+        "desiredSize": 1
+    },
+    "amiType": "AL2_x86_64",  
+    "nodeRole": "arn:aws:iam::621627302500:role/EKS-Nodegroup",
+    "remoteAccess": {
+        "ec2SshKey": "ziya2",
+        "sourceSecurityGroups": ["sg-0bbb2e78941494935"]
+    }
+}
