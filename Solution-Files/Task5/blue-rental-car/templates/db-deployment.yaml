@@ -4,41 +4,48 @@ metadata:
   annotations:
     kompose.cmd: kompose convert -f docker-compose.yml
     kompose.image-pull-secret: regcred
-    kompose.service.expose: carrental.ziyaasici
-    kompose.service.nodeport.port: "30001"
-    kompose.service.type: nodeport
     kompose.version: 1.33.0 (3ce457399)
   labels:
-    io.kompose.service: ui
-  name: ui
+    io.kompose.service: db
+  name: db
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: ui
+      io.kompose.service: db
+  strategy:
+    type: Recreate
   template:
     metadata:
       annotations:
         kompose.cmd: kompose convert -f docker-compose.yml
         kompose.image-pull-secret: regcred
-        kompose.service.expose: carrental.ziyaasici
-        kompose.service.nodeport.port: "30001"
-        kompose.service.type: nodeport
         kompose.version: 1.33.0 (3ce457399)
       labels:
         io.kompose.network/docker-carrental-net: "true"
-        io.kompose.service: ui
+        io.kompose.service: db
     spec:
       containers:
         - env:
-            - name: REACT_APP_API_URL
-              value: http://carrental.ziyaasici:8080/car-rental/api/
-          image: 621627302500.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:reactv1
-          name: brc-frontend
+            - name: POSTGRES_DB
+              value: carrental
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_USER
+              value: techprodb_user
+          image: IMAGE_TAG_PSTGRE
+          name: postgres
           ports:
-            - containerPort: 3000
-              hostPort: 3000
+            - containerPort: 5432
+              hostPort: 5432
               protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: db-data
       imagePullSecrets:
         - name: regcred
       restartPolicy: Always
+      volumes:
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: db-data

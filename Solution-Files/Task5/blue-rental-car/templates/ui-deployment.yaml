@@ -33,7 +33,7 @@ spec:
         - env:
             - name: REACT_APP_API_URL
               value: http://carrental.ziyaasici:8080/car-rental/api/
-          image: 621627302500.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:reactv1
+          image: IMAGE_TAG_UI
           name: brc-frontend
           ports:
             - containerPort: 3000

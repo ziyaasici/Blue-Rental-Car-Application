@@ -1,6 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml
+    kompose.image-pull-secret: regcred
+    kompose.version: 1.33.0 (3ce457399)
   labels:
     io.kompose.service: app
   name: app
@@ -11,6 +15,10 @@ spec:
       io.kompose.service: app
   template:
     metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml
+        kompose.image-pull-secret: regcred
+        kompose.version: 1.33.0 (3ce457399)
       labels:
         io.kompose.network/docker-carrental-net: "true"
         io.kompose.service: app
@@ -23,7 +31,7 @@ spec:
               value: jdbc:postgresql://db:5432/carrental
             - name: SPRING_DATASOURCE_USERNAME
               value: techprodb_user
-          image: 621627302500.dkr.ecr.us-east-1.amazonaws.com/ziyaasici/blue-rental-car:javav1
+          image: IMAGE_TAG_API
           name: brc-backend
           ports:
             - containerPort: 8080

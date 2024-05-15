@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  blue-rental-car:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2024-05-15T03:12:33.218469616Z"
+    description: A Helm chart for Kubernetes
+    digest: 11a8a5af81bc3901ad109c008fd2d2822ee136bbdda94e18fc8b29cecf7b0aa0
+    name: blue-rental-car
+    type: application
+    urls:
+    - blue-rental-car-0.1.0.tgz
+    version: 0.1.0
+generated: "2024-05-15T03:12:33.217722265Z"
