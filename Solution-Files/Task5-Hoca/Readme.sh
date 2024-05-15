@@ -1,10 +1,6 @@
 - # git clone
 git clone xxxx@repoURL
 
-
-- manifestleri hazirla
-
-
 - # eksctl Kurulum
 ARCH=amd64
 PLATFORM=$(uname -s)_$ARCH
@@ -78,3 +74,9 @@ helm package brc_chart/
 
 - # Heml Push to S3 
 helm s3 push ./brc_chart-0.1.0.tgz brc-app
+
+- # Prometheus ve Grafana icin ingress.yaml olustur ve duzenle
+
+- # wait.sh duzenle (nginx ingresslerin podlarin durumunu check etmesi icin)
+
+- # 
