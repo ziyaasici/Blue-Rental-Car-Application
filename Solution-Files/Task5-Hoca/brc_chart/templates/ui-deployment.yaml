@@ -21,7 +21,7 @@ spec:
       annotations:
         kompose.cmd: kompose convert -f docker-compose.yml
         kompose.image-pull-secret: regcred
-        kompose.service.expose: carrental.ziyaasici
+        kompose.service.expose: carrental.ziyaasici.com
         kompose.service.nodeport.port: "30001"
         kompose.service.type: nodeport
         kompose.version: 1.33.0 (3ce457399)
