@@ -63,3 +63,18 @@ rm -rf brc_chart/templates/*
 
 - # Manifest dosyalarini /brc_chart/template altina kopyala ve duzenle
 
+- # S3 Bucket Olustur
+aws s3 mb s3://brc-ziyaasici --region us-east-1
+
+- # S3 Bucket Initialize et
+helm s3 init s3://brc-ziyaasici/stable/myapp
+
+- # Helm Repo Ekle
+helm repo add blue-rental s3://brc-ziyaasici/stable/myapp
+helm repo ls
+
+- # Helm Package before push
+helm package brc_chart/
+
+- # Heml Push to S3 
+helm s3 push ./brc_chart-0.1.0.tgz brc-app
