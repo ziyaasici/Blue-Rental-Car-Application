@@ -96,9 +96,7 @@ pipeline {
                     helm package Task-5-Solution/brc_chart
                     helm s3 push --force brc_chart-${BUILD_NUMBER}.tgz brc-app
                     helm repo update
-                    helm upgrade --install \
-                        brc-app-release brc-app/brc_chart --version ${BUILD_NUMBER} \
-                        --namespace brc
+                    helm upgrade --install brc-app-release brc-app/brc_chart --version ${BUILD_NUMBER} --namespace brc
                 """
              }
         }
