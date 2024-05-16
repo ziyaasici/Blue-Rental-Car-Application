@@ -79,4 +79,6 @@ helm s3 push ./brc_chart-0.1.0.tgz blue-rental
 
 - # wait.sh duzenle (nginx ingresslerin podlarin durumunu check etmesi icin)
 
+- # Jenkins Console Configure et
+
 - # 

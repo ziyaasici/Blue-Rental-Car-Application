@@ -23,9 +23,9 @@ pipeline {
             steps {
                 echo 'Building App Dev Images'
                 sh """
-                    docker build --force-rm -t "${IMAGE_TAG_FE}" "${WORKSPACE}/bluerentalcars-frontend"
-                    docker build --force-rm -t "${IMAGE_TAG_BE}" "${WORKSPACE}/bluerentalcars-backend"
-                    docker build --force-rm -t "${IMAGE_TAG_DB}" "${WORKSPACE}/postgresql"
+                    docker build --force-rm -t "${IMAGE_TAG_FE}" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-frontend"
+                    docker build --force-rm -t "${IMAGE_TAG_BE}" "${WORKSPACE}/Solution-Files/Task3/apps/bluerentalcars-backend"
+                    docker build --force-rm -t "${IMAGE_TAG_DB}" "${WORKSPACE}/Solution-Files/Task3/apps/postgresql"
                     docker image ls
                 """
             }
