@@ -81,4 +81,4 @@ helm s3 push ./brc_chart-0.1.0.tgz blue-rental
 
 - # Jenkins Console Configure et
 
-- # 
+- # Build
