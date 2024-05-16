@@ -87,7 +87,7 @@ pipeline {
             steps {
                 echo 'Blue Rental Cars Deploying'
                 sh """
-                    envsubst < /Solution-Files/Task5-Hoca/brc_chart/values-template.yaml > /Solution-Files/Task5-Hoca/brc_chart/values.yaml
+                    envsubst < ./Solution-Files/Task5-Hoca/brc_chart/values-template.yaml > ./Solution-Files/Task5-Hoca/brc_chart/values.yaml
                     sed -i s/HELM_VERSION/${BUILD_NUMBER}/ Solution-Files/Task5-Hoca/brc_chart/Chart.yaml
                     helm plugin list | grep -q "s3" || helm plugin install https://github.com/hypnoglow/helm-s3.git
                     aws s3 ls s3://brc-ziyaasici/stable/myapp/index.yaml || helm s3 init s3://brc-ziyaasici/stable/myapp
