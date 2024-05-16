@@ -73,7 +73,7 @@ helm repo ls
 helm package brc_chart/
 
 - # Heml Push to S3 
-helm s3 push ./brc_chart-0.1.0.tgz brc-app
+helm s3 push ./brc_chart-0.1.0.tgz blue-rental
 
 - # Prometheus ve Grafana icin ingress.yaml olustur ve duzenle
 
