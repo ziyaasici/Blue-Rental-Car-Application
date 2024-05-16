@@ -79,7 +79,7 @@ pipeline {
         stage('Wait Nginx Ingress Controller Install') {
             steps {
                 echo 'Ingress Install'
-                sh '. ./Task-5-Solution/wait.sh'
+                sh '. ./Solution-Files/Task5-Hoca/wait.sh'
 
             }
         }   
@@ -87,16 +87,16 @@ pipeline {
             steps {
                 echo 'Blue Rental Cars Deploying'
                 sh """
-                    envsubst < Task-5-Solution/brc_chart/values-template.yaml > Task-5-Solution/brc_chart/values.yaml
-                    sed -i s/HELM_VERSION/${BUILD_NUMBER}/ Task-5-Solution/brc_chart/Chart.yaml
+                    envsubst < /Solution-Files/Task5-Hoca/brc_chart/values-template.yaml > /Solution-Files/Task5-Hoca/brc_chart/values.yaml
+                    sed -i s/HELM_VERSION/${BUILD_NUMBER}/ Solution-Files/Task5-Hoca/brc_chart/Chart.yaml
                     helm plugin list | grep -q "s3" || helm plugin install https://github.com/hypnoglow/helm-s3.git
-                    aws s3 ls s3://brc-techpro/stable/myapp/index.yaml || helm s3 init s3://brc-techpro/stable/myapp
-                    helm repo add brc-app s3://brc-techpro/stable/myapp/ || echo "repository name already exists"
+                    aws s3 ls s3://brc-ziyaasici/stable/myapp/index.yaml || helm s3 init s3://brc-ziyaasici/stable/myapp
+                    helm repo add blue-rental s3://brc-ziyaasici/stable/myapp/ || echo "repository name already exists"
                     helm repo update
-                    helm package Task-5-Solution/brc_chart
-                    helm s3 push --force brc_chart-${BUILD_NUMBER}.tgz brc-app
+                    helm package Solution-Files/Task5-Hoca/brc_chart
+                    helm s3 push --force brc_chart-${BUILD_NUMBER}.tgz blue-rental
                     helm repo update
-                    helm upgrade --install brc-app-release brc-app/brc_chart --version ${BUILD_NUMBER} --namespace brc
+                    helm upgrade --install blue-rental-release blue-rental/brc_chart --version ${BUILD_NUMBER} --namespace brc
                 """
              }
         }
@@ -109,7 +109,7 @@ pipeline {
                     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
                     helm repo update
                     helm upgrade --install kubeprostack --namespace monitoring prometheus-community/kube-prometheus-stack
-                    kubectl apply -f Task-5-Solution/prometheus-grafana/ingress.yaml
+                    kubectl apply -f Solution-Files/Task5-Hoca/prometheus-grafana/ingress.yaml
                 """
              }
         }
@@ -120,7 +120,7 @@ pipeline {
                 }
                 script {
                     // Delete application.
-                    sh 'helm uninstall brc-app-release -n brc'
+                    sh 'helm uninstall blue-rental-release -n brc'
                     // Delete the Ingress controller's.
                     sh 'helm uninstall ingress-nginx -n ingress-nginx'
                     // Delete the Monitoring tools.
